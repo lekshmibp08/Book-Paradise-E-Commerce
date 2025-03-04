@@ -15,9 +15,12 @@ passport.use(
     async (accessToken, refreshToken, profile, done) => {
       try {
         //let user = await User.findOne({googleId: profile.id});
-
+        let user = await User.findOne({ email: profile.emails[0].value });
         if (user) {
-          return done(null, user);
+          if (!user.googleId) {
+            user.googleId = profile.id;
+            await user.save();
+          }
         } else {
           const newUser = new User({
             googleId: profile.id,
@@ -30,8 +33,8 @@ passport.use(
             isAdmin: false,
           });
           user = await newUser.save();
-          return done(null, user);
         }
+        return done(null, user);
       } catch (error) {
         return done(error, null);
       }
