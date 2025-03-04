@@ -1,0 +1,213 @@
+
+<%- include("../partials/header") %>
+        
+        <!-- Breadcrumb Start -->
+        <div class="breadcrumb-wrap">
+            <div class="container">
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Home</a></li>
+                    <li class="breadcrumb-item"><a href="#">Pages</a></li>
+                    <li class="breadcrumb-item active">Cart</li>
+                </ul>
+            </div>
+        </div>
+        <!-- Breadcrumb End -->
+        
+        
+        <!-- Cart Start -->
+        <div class="cart-page">
+            <div class="container">
+                <% if (!cart || cart.items.length === 0) { %>
+                    <h3 class="empty-cart">Your cart is empty.</h3>
+                    <a href="/product"><p class="empty-cart">Add Products to cart to purchase</p></a>
+                    
+                <% } else { %>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th>Image</th>
+                                        <th>Name</th>
+                                        <th>Price</th>
+                                        <th>Quantity</th>
+                                        <th>Total</th>
+                                        <th>Remove</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="align-middle">
+                                    <% products.forEach((product) => { %>
+                                        <tr>
+                                            <td><a href="/productDetails?id=<%= product.id %>">
+                                                <img src="/uploads/product-images/<%= product.productImage[0] %>" alt="Image"></a>
+                                            </td>
+                                            <td><a href="/productDetails?id=<%= product.id %>">
+                                                <%= product.productName %></a>
+                                            </td>
+                                            <td id="stock-<%= product._id %>" hidden><%= product.quantity %></td>
+                                            <td>₹ <span class="product-price"><%= product.price %></span></td>
+                                            <td>
+                                                <div class="qty">
+                                                    <button class="btn-minus" data-product-id="<%= product._id %>">
+                                                        <i class="fa fa-minus"></i>
+                                                    </button>
+                                                    <input type="text" class="quantity" value="<%= product.itemQuantity %>" data-product-id="<%= product._id %>">
+                                                    <button class="btn-plus" data-product-id="<%= product._id %>">
+                                                        <i class="fa fa-plus"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                ₹ <span class="item-total" data-product-id="<%= product._id %>"><%= product.itemQuantity * product.price %></span>
+                                            </td>
+                                            <td>
+                                                <a href="#" onclick="deleteItem('<%= product._id %>')">
+                                                    <button><i class="fa fa-trash"></i></button>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    <% }) %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="cart-summary">
+                            <div class="cart-content">
+                                <h3>Cart Summary</h3>
+                                <p>Sub Total<span class="subtotal">₹ <%= cart.totalPrice %></span></p>
+                                <p>Shipping Cost<span class="shipping-cost">₹ 50</span></p>
+                                <h4>Grand Total<span class="grand-total">₹ <%= grandTotal %></span></h4>
+                            </div>
+                            <div class="cart-btn">
+                                <form action="/checkout" method="POST" id="checkoutForm">
+                                    <button type="submit">Checkout</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <% } %>
+            </div>
+        </div>
+        <!-- Cart End -->
+     
+      
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        const updateQuantity = async (productId, newQuantity) => {
+            try {
+                const response = await fetch('/update-quantity', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ productId, newQuantity })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to update quantity');
+                }
+
+                const result = await response.json();
+                document.querySelector(`.item-total[data-product-id="${productId}"]`).textContent = `₹ ${newQuantity * parseFloat(document.querySelector(`.product-price[data-product-id="${productId}"]`).textContent)}`;
+                document.querySelector('.subtotal').textContent = `₹ ${result.subTotal}`;
+                document.querySelector('.grand-total').textContent = `₹ ${result.grandTotal}`;
+
+                window.location.reload(true);
+            } catch (error) {
+                console.error(error.message);
+            }
+        };
+
+        document.querySelectorAll('.btn-minus').forEach(button => {
+            button.addEventListener('click', () => {
+                const productId = button.getAttribute('data-product-id');
+                const quantityInput = document.querySelector(`input[data-product-id="${productId}"]`);
+                let newQuantity = parseInt(quantityInput.value);
+                if (newQuantity > 0) {
+                    quantityInput.value = newQuantity;
+                    updateQuantity(productId, newQuantity);
+                    window.location.reload(true);
+                } else {
+                    const confirmed = Swal.fire({
+                        title: 'Delete Item',
+                        text: 'Are you sure you want to delete this item from your cart?',
+                        icon: 'question',
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes, delete it',
+                        cancelButtonText: 'Cancel',
+                    }).then((confirmed) => {
+                        console.log(confirmed.isConfirmed);
+                        if (confirmed.isConfirmed) {
+                            deleteItem(productId);
+                        } else {
+                            document.querySelector(`input.quantity[data-product-id='${productId}']`).value = 1
+                        }
+                    });
+                }
+            });
+        });
+
+        document.querySelectorAll('.btn-plus').forEach(button => {
+            button.addEventListener('click', () => {
+                const productId = button.getAttribute('data-product-id');
+                const quantityInput = document.querySelector(`input[data-product-id="${productId}"]`);
+                let newQuantity = parseInt(quantityInput.value);
+                const stock = parseInt(document.getElementById(`stock-${productId}`).textContent);
+                if (newQuantity > stock) {
+                    Swal.fire('Out Of Stock', 'Product get Out Of Stock', 'error');
+                    document.querySelector(`input.quantity[data-product-id='${productId}']`).value -= 1
+                } else if (newQuantity < 6) { 
+                    quantityInput.value = newQuantity;
+                    updateQuantity(productId, newQuantity);
+                    window.location.reload(true);
+                } else {
+                    Swal.fire('User Limit', 'Limit Exceeded', 'error');
+                    document.querySelector(`input.quantity[data-product-id='${productId}']`).value = 5
+                }
+            });
+        });
+    }); 
+
+//Sweet Alert for Delete Product from cart    
+function deleteItem(productId) {
+    fetch(`/deleteItem?id=${productId}`, { method: 'DELETE' })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data.message);
+            if (data.message == "Product Removed from the Cart") {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: 'Product removed from the cart',
+                }).then(() => {
+                    window.location.reload();
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: data.message,
+                });
+            }
+        })
+        .catch(error => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'An error occurred while removing the product',
+            });
+            console.error('Error:', error);
+        });
+}
+
+</script>
+<%- include("../partials/footer") %>  

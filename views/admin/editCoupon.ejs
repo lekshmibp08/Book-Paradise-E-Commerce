@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Coupon</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .sidebar {
+            height: 100vh;
+            background-color: #6f42c1;
+            padding-top: 20px;
+            color: white;
+            position: fixed;
+            left: 0;
+            width: 250px;
+            transition: left 0.3s;
+            text-align: center;
+            z-index: 2;
+        }
+        .sidebar a {
+            color: white;
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+			transition: background-color 0.3s, color 0.3s;
+        }
+        .sidebar a:hover {
+            background-color: #5a36a3;			
+        }
+
+        .top-bar {
+            background-color: #6f42c1;
+            color: white;
+            padding: 10px;
+            margin-left: 250px;
+            transition: margin-left 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .top-bar .search-bar {
+            margin-right: 20px;
+        }
+        .main-content {
+            padding: 20px;
+            margin-left: 250px;
+            transition: margin-left 0.3s;
+        }
+        .coupon-form {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .form-control {
+            margin-bottom: 10px;
+        }
+        .btn-edit-coupon {
+            background-color: #6f42c1;
+            color: white;
+            width: 100%;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 20px;
+        }
+    /****************************/
+    /*******Breadcrumb CSS*******/
+    /****************************/
+
+        .breadcrumb {
+            background-color: #f8f9fa; /* Light background color */
+            border-radius: 0.25rem; /* Rounded corners */
+            padding: 0.75rem 1rem; /* Padding inside the breadcrumb */
+            margin-bottom: 1rem; /* Space below the breadcrumb */
+        }
+
+        .breadcrumb-item + .breadcrumb-item::before {
+            content: ">";
+            color: #6c757d; /* Dark gray color for the separator */
+            margin-right: 0.5rem;
+            margin-left: 0.5rem;
+        }
+
+        .breadcrumb a {
+            color: #6f42c1; /* Blue color for links */
+            text-decoration: none; /* No underline for links */
+        }
+
+        .breadcrumb a:hover {
+            color: #5a36a3; /* Darker blue on hover */
+            text-decoration: underline; /* Underline on hover */
+        }
+
+        .breadcrumb-item.active {
+            color: #6c757d; /* Dark gray for active item */
+        }        
+        @media (max-width: 768px) {
+            .sidebar {
+                left: -250px;
+            }
+            .sidebar.active {
+                left: 0;
+            }
+            .top-bar {
+                margin-left: 0;
+            }
+            .top-bar.active {
+                margin-left: 250px;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .main-content.active {
+                margin-left: 250px;
+            }
+        }
+        .toggle-btn {
+            display: none;
+        }
+        @media (max-width: 768px) {
+            .toggle-btn {
+                display: block;
+                cursor: pointer;
+                margin-right: 20px;
+            }
+            .search-bar,
+            .user-info {
+                flex: 1;
+            }
+            .search-bar input {
+                width: 100%;
+            }
+        }
+        .header-content {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .header-content .search-bar {
+            flex-grow: 1;
+            margin-right: 10px;
+        }
+        .header-content .add-coupon-btn {
+            margin-top: 10px;
+            flex-shrink: 0;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .error-message {
+            color: red;
+            font-size: 0.9rem;
+            margin-top: -10px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="sidebar" id="sidebar">
+                <div class="text-center mb-4">
+                    <img src="/adminAssets/assets/images/main-logo.png" alt="Books Paradise" class="img-fluid">
+                </div>
+                <a href="/admin/dashboard">Dashboard</a>
+                <a href="/admin/products">Products</a>
+                <a href="/admin/users">Users</a>
+                <a href="/admin/Orders">Orders</a>
+                <a href="/admin/return-orders">Returned Orders</a>
+                <a href="/admin/coupons">Coupons</a>
+                <a href="/admin/category">Categories</a>
+                <a href="/admin/reports">Reports</a>
+                <a href="/admin/logout">Log Out</a>
+            </div>
+            <div class="col-md-12">
+                <div class="top-bar" id="top-bar">
+                    <div class="d-flex align-items-center">
+                        <span class="toggle-btn" id="toggle-btn"><i class="fas fa-bars fa-2x"></i></span>
+                        <div class="search-bar">
+                            <input type="text" class="form-control" placeholder="Search">
+                        </div>
+                    </div>
+                    <div class="user-info d-flex align-items-center">
+                        <span>Hi Admin</span>
+                        <i class="fas fa-user-circle fa-2x ml-3"></i>
+                    </div>
+                </div>
+                <div class="main-content" id="main-content">
+                    <div class="header-content">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
+                                <li class="breadcrumb-item"><a href="/admin/coupons">Coupons</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Edit Coupon</li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <div class="coupon-form">
+                        <form id="couponForm" action="/admin/coupons/<%= coupon._id %>/edit?_method=PUT" method="POST">                            
+                            <div class="row">
+                                <div class="col-md-6 form-group">
+                                    <label for="couponName">Coupon Name</label>
+                                    <input type="text" class="form-control" id="couponName" name="couponName" value="<%= coupon.name %>" required>
+                                    <div class="error-message" id="couponNameError"></div>
+                                </div>
+                                <div class="col-md-6 form-group">
+                                    <label for="couponCode">Coupon Code</label>
+                                    <input type="text" class="form-control" id="couponCode" name="couponCode" value="<%= coupon.code %>" required>
+                                    <div class="error-message" id="couponCodeError"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="description">Description</label>
+                                <textarea class="form-control" id="description" name="description" rows="5" required><%= coupon.description %></textarea>
+                                <div class="error-message" id="descriptionError"></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 form-group">
+                                    <label for="minPurchaseAmount">Minimum Purchase Amount</label>
+                                    <input type="number" class="form-control" id="minPurchaseAmount" name="minPurchaseAmount" value="<%= coupon.minAmount %>" required>
+                                    <div class="error-message" id="minPurchaseAmountError"></div>
+                                </div>
+                                <div class="col-md-3 form-group">
+                                    <label for="discount">Discount%</label>
+                                    <input type="number" class="form-control" id="discount" name="discount" value="<%= coupon.discount %>" required>
+                                    <div class="error-message" id="discountError"></div>
+                                </div>
+								<div class="col-md-3 form-group">
+									<label for="discount">Max. Discount Amount</label>
+									<input type="number" class="form-control" id="maxDiscount" name="maxDiscount" value="<%= coupon.maxDiscount %>" required>						
+                                    <div class="error-message" id="maxDiscountError"></div>
+								</div>
+                                <div class="col-md-3 form-group">
+                                    <label for="expDate">Expiry Date:</label>
+                                    <input type="date" id="expiryDate" name="expiryDate" class="form-control" 
+                                    value="<%= coupon.expiryDate.toISOString().split('T')[0] %>" required>
+                                    <div class="error-message" id="expiryDateError"></div>
+                                </div>
+                            </div>
+                            <button class="btn btn-edit-coupon" type="submit">Update</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.7/dist/sweetalert2.all.min.js"></script>
+
+    <script>
+//Disabling invalid date
+        document.addEventListener('DOMContentLoaded', function() {
+            var expiryDateInput = document.getElementById('expiryDate');
+            var today = new Date().toISOString().split('T')[0];
+            expiryDateInput.setAttribute('min', today);
+        });
+
+        document.getElementById('toggle-btn').addEventListener('click', function() {
+            var sidebar = document.getElementById('sidebar');
+            var topBar = document.getElementById('top-bar');
+            var mainContent = document.getElementById('main-content');
+            sidebar.classList.toggle('active');
+            topBar.classList.toggle('active');
+            mainContent.classList.toggle('active');
+        });
+
+
+        document.getElementById('couponForm').addEventListener('submit', function(event) {
+        var couponName = document.getElementById('couponName').value.trim();
+        var couponCode = document.getElementById('couponCode').value.trim();
+        var description = document.getElementById('description').value.trim();
+        var minPurchaseAmount = document.getElementById('minPurchaseAmount').value;
+        var discount = document.getElementById('discount').value;
+        var maxDiscount = document.getElementById('maxDiscount').value;
+
+        var errors = false;
+
+        document.getElementById('couponNameError').innerText = '';
+        document.getElementById('couponCodeError').innerText = '';
+        document.getElementById('descriptionError').innerText = '';
+        document.getElementById('minPurchaseAmountError').innerText = '';
+        document.getElementById('discountError').innerText = '';
+        document.getElementById('maxDiscountError').innerText = '';
+        document.getElementById('expiryDateError').innerText = '';
+
+        if (!couponName) {
+                document.getElementById('couponNameError').innerText = 'Coupon Name is required.';
+                errors = true;
+        }
+        if (!couponCode) {
+            document.getElementById('couponCodeError').innerText = 'Coupon Code is required.';
+            errors = true;
+        }
+        if (!description) {
+            document.getElementById('descriptionError').innerText = 'Description is required.';
+            errors = true;
+        }
+
+        if (!minPurchaseAmount || minPurchaseAmount < 0) {
+            document.getElementById('minPurchaseAmountError').innerText = 'Minimum Purchase Amount must be non-negative.';
+            errors = true;
+        }
+        if (!discount || discount < 0 || discount > 100) {
+            document.getElementById('discountError').innerText = 'Discount must be between 0 and 100.';
+            errors = true;
+        }
+        if (!maxDiscount || maxDiscount < 0) {
+            document.getElementById('maxDiscountError').innerText = 'Maximum Discount Amount must be non-negative.';
+            errors = true;
+        }
+        if (!expiryDate) {
+            document.getElementById('expiryDateError').innerText = 'Expiry Date is required.';
+            errors = true;
+        }
+        if (errors) {
+            event.preventDefault();
+            Swal.fire({
+                icon: 'error',
+                title: 'Validation Error',
+                text: 'Please correct the highlighted errors and try again.',
+            });
+        } else {
+            event.preventDefault(); // Prevent form submission for demo purposes
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: 'Coupon submitted successfully!',
+                confirmButtonText: 'OK'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('couponForm').submit(); 
+                }
+            });
+        }
+    });
+    </script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+body{
+    background-color: rgb(244, 237, 237);
+    font-family: serif;
+    background-image: url('/adminAssets/login/preview.jpg');            
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.center-div{
+    padding-top: 10%;
+}
+.btn.btn-outline-secondary{
+    padding: 5px 40px;
+    margin-top: 15px;
+}
+form{
+    padding: 2em 2em;
+}
+.btn:hover {
+    background-color: #198754; 
+    color: white; 
+}

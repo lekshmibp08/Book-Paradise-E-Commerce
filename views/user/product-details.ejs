@@ -1,0 +1,408 @@
+
+    <%- include("../partials/header") %>
+    
+        <!-- Breadcrumb Start -->
+        <div class="breadcrumb-wrap">
+            <div class="container">
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Home</a></li>
+                    <li class="breadcrumb-item"><a href="/product">Products</a></li>
+                    <li class="breadcrumb-item active">product-details</li>
+                </ul>
+            </div>
+        </div>
+        <!-- Breadcrumb End -->
+        
+        
+        <!-- Product Detail Start -->
+        <div class="product-detail">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-9">
+                        <div class="row align-items-center product-detail-top">
+
+                            <div class="col-md-5">
+                                <% if (data.quantity === 0) { %>
+                                    <div class="product-status">sold out</div>
+                                <% } %>
+                                <div id="zoom" style="z-index: 2;">
+                                    <img id="zoom-image" 
+                                         src="/uploads/product-images/<%= data.productImage[0] %>" alt="<%= data.productName %>">
+                                </div>
+                                <div class="thumb-nails">
+                                    <% for (let j = 0; j < data.productImage.length; j++) { %>
+                                        <img class="thumbnail" style="width: 60px; height: auto; cursor: pointer;"
+                                             src="/uploads/product-images/<%= data.productImage[j] %>" alt="<%= data.productName %>">
+                                    <% } %>
+                                </div>
+                            </div>
+
+                           
+                            <div class="col-md-7">                                
+                                <div class="product-content">
+                                    <div class="title">
+                                        <h2><%= data.productName %></h2>
+                                    </div>
+                                    
+                                        <p>By <%= data.authorTitle %></p>
+                                        <h6>Category: <%= data.category %></h6>
+                                    
+                                    <div class="ratting">
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                    </div>
+                                    <div class="price">₹ <%= data.salePrice.toLocaleString('en-IN') %> 
+                                        <span>₹ <%= data.regularPrice.toLocaleString('en-IN') %></span></div>
+                                    <div class="details">
+                                        <p> <%= data.description %></p>
+                                    </div>
+                                    
+                                    <div class="action">
+                                        <a href="javascript:void(0);" onclick="addToCart('<%= data._id %>')">
+                                            <i class="fa fa-cart-plus"></i>
+                                        </a>
+
+                                        <% if (typeof user !== 'undefined' && user && user.wishlist && user.wishlist.includes(data._id)) { %>
+                                            <a href="javascript:void(0);" onclick="toggleWishlist('<%= data._id %>')">
+                                                <i class="fa fa-heart" id="wishlist-icon-<%= data._id %>" style="color: red;"></i>
+                                            </a>
+                                        <% } else { %>
+                                            <a href="javascript:void(0);" onclick="toggleWishlist('<%= data._id %>')">
+                                                <i class="fa fa-heart" id="wishlist-icon-<%= data._id %>" style="color: white;"></i>
+                                            </a>
+                                        <% } %>  
+
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row product-detail-bottom">
+                            <div class="col-lg-12">
+                                <ul class="nav nav-pills nav-justified">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" data-toggle="pill" href="#description">Description</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="pill" href="#specification">About Author</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="pill" href="#reviews">Reviews (1)</a>
+                                    </li>
+                                </ul>
+
+                                <div class="tab-content">
+                                    <div id="description" class="container tab-pane active"><br>
+                                        <h4>Product description</h4>
+                                        <p>
+                                            <%= data.description %>
+                                        </p>
+                                    </div>
+                                    <div id="specification" class="container tab-pane fade"><br>
+                                        <h4>About Author</h4>
+                                        <p>                                            
+                                            <%= data.authorDetails %>
+                                        </p>
+                                    </div>
+                                    <div id="reviews" class="container tab-pane fade"><br>
+                                        <div class="reviews-submitted">
+                                            <div class="reviewer">Phasellus Gravida - <span>01 Jan 2020</span></div>
+                                            <div class="ratting">
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                            </div>
+                                            <p>
+                                                Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.
+                                            </p>
+                                        </div>
+                                        <div class="reviews-submit">
+                                            <h4>Give your Review:</h4>
+                                            <div class="ratting">
+                                                <i class="fa fa-star-o"></i>
+                                                <i class="fa fa-star-o"></i>
+                                                <i class="fa fa-star-o"></i>
+                                                <i class="fa fa-star-o"></i>
+                                                <i class="fa fa-star-o"></i>
+                                            </div>
+                                            <div class="row form">
+                                                <div class="col-sm-6">
+                                                    <input type="text" placeholder="Name">
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <input type="email" placeholder="Email">
+                                                </div>
+                                                <div class="col-sm-12">
+                                                    <textarea placeholder="Review"></textarea>
+                                                </div>
+                                                <div class="col-sm-12">
+                                                    <button>Submit</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="container">
+                            <div class="section-header">
+                                <h3>Related Products</h3>
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec viverra at massa sit amet ultricies. Nullam consequat, mauris non interdum cursus
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="row align-items-center product-slider product-slider-3">
+                            <div class="col-lg-3">
+                                <div class="product-item">
+                                    <div class="product-image">
+                                        <a href="product-detail.html">
+                                            <img src="/uploads/product-images/1716987486551.jpg" alt="Product Image">
+                                        </a>
+                                        <div class="product-action">
+                                            <a href="#"><i class="fa fa-cart-plus"></i></a>
+                                            <a href="#"><i class="fa fa-heart"></i></a>
+                                        </div>
+                                    </div>
+                                    <div class="product-content">
+                                        <div class="title"><a href="#">Phasellus Gravida</a></div>
+                                        <div class="ratting">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                        </div>
+                                        <div class="price">$22 <span>$25</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="product-item">
+                                    <div class="product-image">
+                                        <a href="product-detail.html">
+                                            <img src="/uploads/product-images/1716987486551.jpg" alt="Product Image">
+                                        </a>
+                                        <div class="product-action">
+                                            <a href="#"><i class="fa fa-cart-plus"></i></a>
+                                            <a href="#"><i class="fa fa-heart"></i></a>
+                                        </div>
+                                    </div>
+                                    <div class="product-content">
+                                        <div class="title"><a href="#">Phasellus Gravida</a></div>
+                                        <div class="ratting">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                        </div>
+                                        <div class="price">$22 <span>$25</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="product-item">
+                                    <div class="product-image">
+                                        <a href="product-detail.html">
+                                            <img src="/uploads/product-images/1716987486551.jpg" alt="Product Image">
+                                        </a>
+                                        <div class="product-action">
+                                            <a href="#"><i class="fa fa-cart-plus"></i></a>
+                                            <a href="#"><i class="fa fa-heart"></i></a>
+                                        </div>
+                                    </div>
+                                    <div class="product-content">
+                                        <div class="title"><a href="#">Phasellus Gravida</a></div>
+                                        <div class="ratting">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                        </div>
+                                        <div class="price">$22 <span>$25</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="product-item">
+                                    <div class="product-image">
+                                        <a href="product-detail.html">
+                                            <img src="/uploads/product-images/1716987486551.jpg" alt="Product Image">
+                                        </a>
+                                        <div class="product-action">
+                                            <a href="#"><i class="fa fa-cart-plus"></i></a>
+                                            <a href="#"><i class="fa fa-heart"></i></a>
+                                        </div>
+                                    </div>
+                                    <div class="product-content">
+                                        <div class="title"><a href="#">Phasellus Gravida</a></div>
+                                        <div class="ratting">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                        </div>
+                                        <div class="price">$22 <span>$25</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="product-item">
+                                    <div class="product-image">
+                                        <a href="product-detail.html">
+                                            <img src="/uploads/product-images/1717119574793.jpg" alt="Product Image">
+                                        </a>
+                                        <div class="product-action">
+                                            <a href="#"><i class="fa fa-cart-plus"></i></a>
+                                            <a href="#"><i class="fa fa-heart"></i></a>
+                                        </div>
+                                    </div>
+                                    <div class="product-content">
+                                        <div class="title"><a href="#">Phasellus Gravida</a></div>
+                                        <div class="ratting">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                        </div>
+                                        <div class="price">$22 <span>$25</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Product Detail End -->
+
+
+<script>
+//Image Zooming
+        var options = {
+            width: 300,
+            height: 400,
+            zoomWidth: 50,
+            scale: 1.5
+        };
+        new ImageZoom(document.getElementById('zoom'), options);
+    
+        document.addEventListener("DOMContentLoaded", function() {
+            const thumbnails = document.querySelectorAll(".thumbnail");
+            const zoomImage = document.getElementById("zoom-image");
+
+            thumbnails.forEach(thumbnail => {
+                thumbnail.addEventListener("click", function() {
+                    zoomImage.src = this.src;
+                });
+            });
+        });
+
+        
+        function toggleWishlist(productId) {
+    console.log("AJAX Working");
+    $.ajax({
+        url: `/add-to-wishlist?id=${productId}`,
+        type: 'POST',
+        success: function(response) {
+            console.log('Success response:', response);
+            if(response) {
+            Swal.fire({
+                title: "Success",
+                text: response.message,
+                icon: 'success',
+                timer: 2000,
+                showConfirmButton: false
+            });
+
+            const icon = document.getElementById(`wishlist-icon-${productId}`);
+            if (icon) {
+                if (response.added) {
+                    icon.style.color = 'red';
+                } else {
+                    icon.style.color = 'white';
+                }
+            }
+        }
+        },
+        error: function(error) {
+            console.log('Error:', error);
+
+            let errorMessage = 'Something went wrong!';
+            let errorTitle = 'Error!';
+
+            if (error.status === 404) {  
+                errorTitle = 'User Not Found';
+                errorMessage = 'Please login to manage your Wishlist';
+            } else if (error.responseJSON && error.responseJSON.message) {
+                errorMessage = error.responseJSON.message;
+            }
+
+            Swal.fire({
+                title: errorTitle,
+                text: errorMessage,
+                icon: 'error',
+                showConfirmButton: true
+            }).then(() =>{
+                window.location.href = '/login'
+            })
+        }
+    });
+}
+        
+
+function addToCart(productId) {
+
+    fetch(`/add-to-cart?id=${productId}`, {
+        method: 'POST',
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Response received:', data.status);
+        if (data.status === "Please Login to add products to cart") {
+            Swal.fire({
+                icon: 'error',
+                title: 'User Not Found',
+                text: data.status,
+            }).then(() => {
+                window.location.href = "/login";
+            });
+        } else if (data.status === true) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: data.message,
+            });
+        } else if (data.status === false) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: data.message,
+            });
+        } 
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'An unexpected error occurred. Please try again later.',
+        });
+    });
+}
+</script>
+
+
+<%- include("../partials/footer") %>

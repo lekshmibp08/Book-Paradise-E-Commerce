@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders List</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .sidebar {
+            height: 100vh;
+            background-color: #6f42c1;
+            padding-top: 20px;
+            color: white;
+            position: fixed;
+            left: 0;
+            width: 250px;
+            transition: left 0.3s;
+            text-align: center;
+        }
+        .sidebar a {
+            color: white;
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+        }
+        .sidebar a:hover {
+            background-color: #5a36a3;
+        }
+        .top-bar {
+            background-color: #6f42c1;
+            color: white;
+            padding: 10px;
+            margin-left: 250px;
+            transition: margin-left 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                left: -250px;
+            }
+            .sidebar.active {
+                left: 0;
+            }
+            .top-bar {
+                margin-left: 0;
+            }
+            .top-bar.active {
+                margin-left: 250px;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .main-content.active {
+                margin-left: 250px;
+            }
+        }
+        .toggle-btn {
+            display: none;
+        }
+        @media (max-width: 768px) {
+            .toggle-btn {
+                display: block;
+                cursor: pointer;
+                margin-right: 20px;
+            }
+        }
+        .user-info {
+            margin-left: auto; 
+            display: flex;
+            align-items: center;
+        }
+
+        .order-container {
+            margin-left: 240px;
+        }
+        .content-body {
+    padding: 20px;
+}
+
+.order-details,
+.user-detail,
+.shipping-details{
+    padding: 25px; 
+    background-color: #f2f2f2; 
+    margin-bottom: 40px; 
+}
+.order-items,
+.back-link {
+    margin-bottom: 30px;
+}
+
+.order-details h4,
+.user-detail h4,
+.shipping-details h4,
+.order-items h4,
+.back-link a {
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.order-details p,
+.user-details p,
+.shipping-details p {
+    margin-bottom: 10px;
+}
+.order-items p {
+    margin-bottom: 10px;
+}
+
+.order-items table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.order-items th,
+.order-items td {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+}
+
+.order-items th {
+    background-color: #f2f2f2;
+}
+
+.order-items img {
+    max-width: 45px;
+    height: auto;
+}
+
+.back-link a {
+    color: #007bff;
+}
+
+.back-link a:hover {
+    text-decoration: underline;
+}
+.order-head {
+    margin: 40px;
+    padding-inline: 400px;
+}
+
+
+       
+       
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="sidebar" id="sidebar">
+                <div class="text-center mb-4">
+                    <img src="/adminAssets/assets/images/main-logo.png" alt="Books Paradise" class="img-fluid">
+                </div>
+                <a href="/admin/dashboard">Dashboard</a>
+                <a href="/admin/products">Products</a>
+                <a href="/admin/users">Users</a>
+                <a href="/admin/Orders">Orders</a>
+                <a href="/admin/return-orders">Returned Orders</a>
+                <a href="/admin/coupons">Coupons</a>
+                <a href="/admin/category">Categories</a>
+                <a href="/admin/reports">Reports</a>
+                <a href="/admin/logout">Log Out</a>
+            </div>
+            <div class="col-md-12">
+                <div class="top-bar" id="top-bar">
+                    <div class="user-info d-flex align-items-center">
+                        <span>Hi Admin</span>
+                        <i class="fas fa-user-circle fa-2x ml-3"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="order-container row ">
+                <h2 class="order-head col-12">Order Details</h2>
+                <div class="order-details box col-4">
+                    <h4>Order Information</h4>
+                    <p><strong>Order ID:</strong><span class="spaced-text"><%= orderData.orderId %></p></span></p>
+                    <p><strong>Order Date:</strong><span class="spaced-text">
+                        <%= new Date(orderData.createdAt).toLocaleDateString() %>,
+                        <%= new Date(orderData.createdAt).toLocaleTimeString() %>
+                    </span> </p>
+                    <p><strong>Status:</strong><span class="spaced-text"><%= orderData.status %></p></span> </p>
+                    <p><strong>Total Amount:</strong><span class="spaced-text">₹ <%= orderData.totalAmount %></p></span> </p>
+                    <p><strong>Payment Method:</strong><span class="spaced-text"><%= orderData.paymentMethod %></p></span> </p>
+                    <p><strong>Return Status:</strong><span class="spaced-text"><%= orderData.returnStatus %></p></span> </p>
+                </div>
+        
+                <div class="user-detail col-4">
+                    <h4>User Information</h4>
+                    <p class="user-details"><strong>Name:</strong> <span class="spaced-text"><%= orderData.userId.name %></p></span></p>
+                    <p class="user-details"><strong>Email:</strong> <span class="spaced-text"><%= orderData.userId.email %></p></span></p>
+                    <p class="user-details"><strong>Phone:</strong> <span class="spaced-text"><%= orderData.userId.mobile %></p></span></p>
+                </div>
+        
+                <div class="shipping-details col-4">
+                    <h4>Shipping Address</h4>
+                    <% if (orderData.shippingAddress) { %>
+                        <p class="hans"><strong>House No.:</strong> <span class="spaced-text"><%= orderData.shippingAddress.addressLine%></p></span> </p>
+                        <p class="hans"><strong>Street:</strong> <span class="spaced-text"><%= orderData.shippingAddress.locality%></p></span> </p>
+                        <p class="hans"><strong>City:</strong> <span class="spaced-text"><%= orderData.shippingAddress.city %></p></span> </p>
+                        <p class="hans"><strong>State:</strong> <span class="spaced-text"><%= orderData.shippingAddress.state %></p></span> </p>
+                        <p class="hans"><strong>Postal Code:</strong> <span class="spaced-text"><%= orderData.shippingAddress.pin %></p></span> </p>
+                    <% } else { %>
+                        <p><span style="color: red;">Address is not available</span></p>
+                    <% } %>                        
+                </div>
+        
+                <div class="order-items col-12">
+                    <h4>Items Ordered</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Product Image</th>
+                                <th>Product Name</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% orderData.items.forEach(item => { %>
+                            <tr class="final">
+                                <td><img src="/uploads/product-images/<%= item.product.productImage[0] %>" alt=""></td>
+                                <td><%= item.product.productName %></td>
+                                <td><%= item.quantity %></td>
+                                <td>₹ <%= item.total %></td>
+                            </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

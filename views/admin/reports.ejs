@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Listing</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .sidebar {
+            height: 100vh;
+            background-color: #6f42c1;
+            padding-top: 20px;
+            color: white;
+            position: fixed;
+            left: 0;
+            width: 250px;
+            transition: left 0.3s;
+            z-index: 2;
+        }
+        .sidebar a {
+            color: white;
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+            text-align: center;
+        }
+        .sidebar a:hover {
+            background-color: #5a36a3;
+        }
+        .top-bar {
+            background-color: #6f42c1;
+            color: white;
+            padding: 10px;
+            margin-left: 250px;
+            transition: margin-left 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .top-bar .search-bar {
+            margin-right: 20px;
+        }
+        .main-content {
+            padding: 20px;
+            margin-left: 250px;
+            transition: margin-left 0.3s;
+        }
+        .table thead th {
+            background-color: #6f42c1;
+            color: white;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                left: -250px;
+            }
+            .sidebar.active {
+                left: 0;
+            }
+            .top-bar {
+                margin-left: 0;
+            }
+            .top-bar.active {
+                margin-left: 250px;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .main-content.active {
+                margin-left: 250px;
+            }
+        }
+        .toggle-btn {
+            display: none;
+        }
+        @media (max-width: 768px) {
+            .toggle-btn {
+                display: block;
+                cursor: pointer;
+                margin-right: 20px;
+            }
+            .search-bar,
+            .user-info {
+                flex: 1;
+            }
+            .search-bar input {
+                width: 100%;
+            }
+        }
+        .header-content {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .header-content .search-bar {
+            flex-grow: 1;
+            margin-right: 10px;
+        }
+        .header-content .add-product-btn {
+            margin-top: 10px;
+            flex-shrink: 0;
+        }
+        .table tbody td {
+            text-align: center;
+        }
+
+        /******Model CSS*******/
+
+        .modal {
+          display: none;
+          position: fixed;
+          z-index: 1;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 100%;
+          /* overflow: auto; */
+          background-color: rgba(0, 0, 0, 0.4);
+        }
+        
+        .modal-content {
+            position: relative;
+          background-color:  #dad4c6;
+          margin: 15% auto;
+          padding: 20px;
+          border: 1px solid #888;
+          width: 40%;
+        }
+        
+        .close-button {
+          color: #aaa;
+          float: right;
+          font-size: 28px;
+          font-weight: bold;
+        }
+        
+        .close-button:hover,
+        .close-button:focus {
+          color: black;
+          text-decoration: none;
+          cursor: pointer;
+        }
+        
+        .report-Form {
+          width: 100%;
+          padding: 20px;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .report-Form label {
+            position: relative;
+          font-weight: bold;
+          margin-bottom: 5px;
+        }
+        
+        .report-Form input[type="number"],
+        .report-Form select {
+            position: relative;
+          width: 100%;
+          height: auto;
+          padding: 10px;
+          border: 1px solid #ccc;
+          margin-bottom: 20px;
+        }
+        
+        .report-Form button[type="submit"] {
+          background-color: #6f42c1;
+          color: #fff;
+          padding: 10px 20px;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+        }
+        
+        .report-Form button[type="submit"]:hover {
+          background-color: #4c2c86;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title {
+            margin: 0;
+        }
+
+        .button-wrapper {
+            display: flex;
+            gap: 20px; /* Space between buttons */
+        }
+
+        .button-wrapper .report {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #6f42c1;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .button-wrapper .report:hover {
+            background-color: #4c2c86;
+        }
+
+        .button-wrapper .report i {
+            margin-right: 5px;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            list-style: none;
+            padding: 0;
+        }
+
+        .pagination .page-item {
+            margin: 0 5px;
+        }
+
+        .pagination .page-link {
+            display: block;
+            padding: 10px 15px;
+            background-color: #6f42c1;
+            color: #fff;
+            border: 1px solid #6f42c1;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .pagination .page-link:hover {
+            background-color: #4c2c86;
+            color: #fff;
+        }
+
+        .pagination .page-item.active .page-link {
+            background-color: #4c2c86;
+            border-color: #4c2c86;
+        }
+
+        .pagination .page-item.disabled .page-link {
+            background-color: #e9ecef;
+            color: #6c757d;
+            border-color: #dee2e6;
+        }
+
+        /****************************/
+        /*******Breadcrumb CSS*******/
+        /****************************/
+
+        .breadcrumb {
+            background-color: #f8f9fa; /* Light background color */
+            border-radius: 0.25rem; /* Rounded corners */
+            padding: 0.75rem 1rem; /* Padding inside the breadcrumb */
+            margin-bottom: 1rem; /* Space below the breadcrumb */
+        }
+
+        .breadcrumb-item + .breadcrumb-item::before {
+            content: ">";
+            color: #6c757d; /* Dark gray color for the separator */
+            margin-right: 0.5rem;
+            margin-left: 0.5rem;
+        }
+
+        .breadcrumb a {
+            color: #007bff; /* Blue color for links */
+            text-decoration: none; /* No underline for links */
+        }
+
+        .breadcrumb a:hover {
+            color: #0056b3; /* Darker blue on hover */
+            text-decoration: underline; /* Underline on hover */
+        }
+
+        .breadcrumb-item.active {
+            color: #6c757d; /* Dark gray for active item */
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="sidebar" id="sidebar">
+                <div class="text-center mb-4">
+                    <img src="/adminAssets/assets/images/main-logo.png" alt="Books Paradise" class="img-fluid">
+                </div>
+                <a href="/admin/dashboard">Dashboard</a>
+                <a href="/admin/products">Products</a>
+                <a href="/admin/users">Users</a>
+                <a href="/admin/Orders">Orders</a>
+                <a href="/admin/return-orders">Returned Orders</a>
+                <a href="/admin/coupons">Coupons</a>
+                <a href="/admin/category">Categories</a>
+                <a href="/admin/reports">Reports</a>
+                <a href="/admin/logout">Log Out</a>
+            </div>
+            <div class="col-md-12">
+                <div class="top-bar" id="top-bar">
+                    <div class="d-flex align-items-center">
+                        <span class="toggle-btn" id="toggle-btn"><i class="fas fa-bars fa-2x"></i></span>
+                        <div class="search-bar">
+                            <input type="text" class="form-control" placeholder="Search">
+                        </div>
+                        <div class="search-bar">
+                            <input type="text" class="form-control" placeholder="Search product name">
+                        </div>
+                    </div>
+                    <div class="user-info d-flex align-items-center">
+                        <span>Hi Admin</span>
+                        <i class="fas fa-user-circle fa-2x ml-3"></i>
+                    </div>
+                </div>
+                <div class="main-content" id="main-content">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Reports</li>
+                        </ol>
+                    </nav>
+                    <div class="header-content d-flex justify-content-between align-items-center mb-3">
+                        <h2 class="header-title">Sales Report</h2>
+                        <div class="button-wrapper">
+                            <a href="#" class="report" data-report-type="pdf">
+                                <i class='bx bx-cloud-download'></i>
+                                <span>Generate Sale Report</span>
+                            </a>
+                            <a href="#" class="report" data-report-type="excel">
+                                <i class='bx bx-cloud-download'></i>
+                                <span>Generate Excel Report</span>
+                            </a>
+                        </div>
+                    </div>
+                    <table class="table table-striped text-center"">
+                        <thead>
+                            <tr>
+                                <th>Order id</th>
+                                <th>Order date</th>
+                                <th>User name</th>
+                                <th>Total Price</th>
+                                <th>Discount</th>
+                                <th>Total Paid</th>
+                                <th>Payment Method</th>
+                                <th>Order status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% orders.forEach(order=> { %>                        
+                            <tr>
+                                <td><%= order.orderId %></td>
+                                <td>
+                                    <%= new Date(order.createdAt).toLocaleDateString() %>
+                                    <br>
+                                    <%= new Date(order.createdAt).toLocaleTimeString() %>
+                                </td>
+                                <td><%= order.userId.name %></td>
+                                <td><%= order.totalAmount %></td>
+                                <td><%= order.couponDiscout %></td>
+                                <td><%= order.totalAmount - order.couponDiscout + 50 %></td>
+                                <td><%= order.paymentMethod %></td>
+                                <td><%= order.status %></td>
+                            </tr>
+                            <% }); %>                        
+                    </table>
+                    <nav>
+                        <ul class="pagination">
+                            <% if (currentPage > 1) { %>
+                                <li class="page-item"><a href="?page=<%= currentPage - 1 %>&limit=<%= limit %>" class="page-link">Previous</a></li>
+                            <% } %>
+                            <% for (let i = 1; i <= totalPages; i++) { %>
+                                <% if (i === currentPage) { %>
+                                    <li class="page-item active"><span class="page-link"><%= i %></span></li>
+                                <% } else { %>
+                                    <li class="page-item"><a href="?page=<%= i %>&limit=<%= limit %>" class="page-link"><%= i %></a></li>
+                                <% } %>
+                            <% } %>
+                            <% if (currentPage < totalPages) { %>
+                                <li class="page-item"><a href="?page=<%= currentPage + 1 %>&limit=<%= limit %>" class="page-link">Next</a></li>
+                            <% } %>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!-- Modal -->
+
+<div id="reportModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <h2>Generate Sales Report</h2>
+        <form id="report-form" class="report-Form" action="/admin/reports/generate-report" method="post">
+            <input type="hidden" id="report-type" name="reportType" value="pdf">
+            <label for="date-filter">Date Filter:</label>
+            <select id="date-filter" name="datefilter" >
+                <option value="daily">Daily</option>
+                <option value="weekly">Weekly</option>
+                <option value="monthly">Monthly</option>
+                <option value="custom">Custom Date Range</option>
+            </select>
+
+            <!-- Custom Date Range Fields -->
+            <div id="custom-date-range" style="display: none;">
+                <label for="start-date">Start Date:</label>
+                <input type="date" id="start-date" name="startdate">
+                <label for="end-date">End Date:</label>
+                <input type="date" id="end-date" name="enddate">
+            </div>
+
+            <button type="submit">Generate</button>
+        </form>
+    </div>
+</div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.7/dist/sweetalert2.all.min.js"></script>
+
+    <script>
+        document.getElementById('toggle-btn').addEventListener('click', function() {
+            var sidebar = document.getElementById('sidebar');
+            var topBar = document.getElementById('top-bar');
+            var mainContent = document.getElementById('main-content');
+            sidebar.classList.toggle('active');
+            topBar.classList.toggle('active');
+            mainContent.classList.toggle('active');
+        });
+    
+        const modal = document.getElementById('reportModal');
+        const reportLinks = document.querySelectorAll('.report');
+        const reportTypeInput = document.getElementById('report-type');
+    
+        reportLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                reportTypeInput.value = link.getAttribute('data-report-type');
+                modal.style.display = 'block';
+            });
+        });
+    
+        const dateFilterSelect = document.getElementById('date-filter');
+    
+        dateFilterSelect.addEventListener('change', (e) => {
+            const selectedDateFilter = e.target.value;
+    
+            if (selectedDateFilter === 'custom') {
+                document.getElementById('custom-date-range').style.display = 'block';
+            } else {
+                document.getElementById('custom-date-range').style.display = 'none';
+            }
+        });
+    
+        const form = document.getElementById('report-form');
+        const startDateInput = document.getElementById('start-date');
+        const endDateInput = document.getElementById('end-date');
+    
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+    
+            if (dateFilterSelect.value === 'custom') {
+                if (!startDateInput.value) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Invalid Date',
+                        text: 'Please select a start date',
+                        confirmButtonText: 'OK'
+                    })
+                    return;
+                }
+    
+                if (!endDateInput.value) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Invalid Date',
+                        text: 'Please select an end date',
+                        confirmButtonText: 'OK'
+                    })
+                    return;
+                }
+    
+                const startDate = new Date(startDateInput.value);
+                const endDate = new Date(endDateInput.value);
+                const today = new Date();
+    
+                if (startDate >= endDate) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Invalid Date',
+                        text: 'The start date must be less than the end date.',
+                        confirmButtonText: 'OK'
+                    })
+                    return;
+                }
+    
+                if (startDate >= today || endDate >= today) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Invalid Date',
+                        text: 'Ensure the selected date is not after today.',
+                        confirmButtonText: 'OK'
+                    })
+                    return;
+                }
+                
+            }
+    
+            form.submit();
+            modal.style.display = 'none';
+        });
+
+        // Close modal when close button is clicked
+        const closeButton = document.querySelector('.close-button');
+        closeButton.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+    </script>
+</body>
+</html>

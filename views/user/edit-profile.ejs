@@ -1,0 +1,81 @@
+
+
+<%- include("../partials/header") %>
+<link rel="stylesheet" href="/userAssets/css/editProfile.css">
+
+<!-- Breadcrumb Start -->
+<div class="breadcrumb-wrap">
+    <div class="container">
+        <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="/profile">My Account</a></li>
+            <li class="breadcrumb-item active">Profile</li>
+        </ul>
+    </div>
+</div>
+<!-- Breadcrumb End -->
+
+<!-- My Account Start -->
+<div class="my-account">
+    <div class="container">
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div class="edit-container">
+                    <h2>Edit Profile</h2>
+                    <form action="/update-profile/<%= userData._id %>" method="POST" class="edit-form" id="editProfileForm">
+                        <div id="formAlert" class="alert" style="display:none; color: red; margin-top: 10px;"></div>
+                        <div class="form-group">
+                            <label for="firstname">Full Name</label>
+                            <input type="text" id="firstname" name="name" value="<%= userData.name %>" required>
+                        </div>
+            
+                        <div class="form-group">
+                            <label for="mobile">Mobile Number</label>
+                            <input type="text" id="mobile" name="mobile" value="<%= userData.mobile %>" required>
+                        </div>
+            
+                        <div class="form-group" hidden>
+                            <label for="email">Email ID</label>
+                            <input type="email" id="email" name="email" value="<%= userData.email %>" required>
+                        </div>
+            
+                        <div id="formAlert" class="alert" style="display:none; color: red; margin-top: 10px;"></div>
+            
+                        <button type="submit" class="save-button">Save Changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- My Account End -->
+
+<script>
+    document.getElementById('editProfileForm').addEventListener('submit', function(event) {
+        const nameInput = document.getElementById('firstname');
+        const mobileInput = document.getElementById('mobile');
+        const formAlert = document.getElementById('formAlert');
+
+        let errorMessage = '';
+
+        if (nameInput.value.trim() === '') {
+            errorMessage = 'Full Name cannot be empty or just spaces.';
+            nameInput.focus();
+        }
+        if (!/^\d{10}$/.test(mobileInput.value.trim())) {
+            errorMessage = 'Mobile Number must be a 10-digit number.';
+            mobileInput.focus();
+        } 
+
+        if (errorMessage) {
+            formAlert.textContent = errorMessage;
+            formAlert.style.display = 'block';
+            event.preventDefault();
+        } else {
+            formAlert.style.display = 'none';
+        }
+    });
+</script>
+
+<%- include("../partials/footer") %>

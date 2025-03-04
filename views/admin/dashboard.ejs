@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .sidebar {
+            height: 100vh;
+            background-color: #6f42c1;
+            padding-top: 20px;
+            color: white;
+            position: fixed;
+            left: 0;
+            width: 250px;
+            transition: left 0.3s;
+            z-index: 2;
+        }
+        .sidebar a {
+            color: white;
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+            text-align: center;
+        }
+        .sidebar a:hover {
+            background-color: #5a36a3;
+        }
+        .top-bar {
+            background-color: #6f42c1;
+            color: white;
+            padding: 10px;
+            margin-left: 250px;
+            transition: margin-left 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .top-bar .search-bar {
+            margin-right: 20px;
+        }
+        .main-content {
+            padding: 20px;
+            margin-left: 250px;
+            transition: margin-left 0.3s;
+        }
+        .breadcrumb {
+            background-color: #f8f9fa; 
+            border-radius: 0.25rem; /* Rounded corners */
+            padding: 0.75rem 1rem; /* Padding inside the breadcrumb */
+            margin-bottom: 1rem; /* Space below the breadcrumb */
+        }
+        
+        .breadcrumb-item + .breadcrumb-item::before {
+            content: ">";
+            color: #6c757d; /* Dark gray color for the separator */
+            margin-right: 0.5rem;
+            margin-left: 0.5rem;
+        }
+        
+        .breadcrumb a {
+            color: #007bff; /* Blue color for links */
+            text-decoration: none; /* No underline for links */
+        }
+        
+        .breadcrumb a:hover {
+            color: #0056b3; /* Darker blue on hover */
+            text-decoration: underline; /* Underline on hover */
+        }
+        
+        .breadcrumb-item.active {
+            color: #6c757d; /* Dark gray for active item */
+        }
+        .card {
+            background-color: #d1c4e9;
+            color: black;
+            text-align: center;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .card h3 {
+            font-size: 2em;
+        }
+        .chart {
+            background-color: #e1bee7;
+            border-radius: 10px;
+            padding: 20px;
+        }
+        .download-btn {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            margin-top: 20px;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                left: -250px;
+            }
+            .sidebar.active {
+                left: 0;
+            }
+            .top-bar {
+                margin-left: 0;
+            }
+            .top-bar.active {
+                margin-left: 250px;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .main-content.active {
+                margin-left: 250px;
+            }
+        }
+        .toggle-btn {
+            display: none;
+        }
+        @media (max-width: 768px) {
+            .toggle-btn {
+                display: block;
+                cursor: pointer;
+                margin-right: 20px;
+            }
+            .search-bar,
+            .user-info {
+                flex: 1;
+            }
+            .search-bar input {
+                width: 100%;
+            }
+        }
+        .header-content {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .header-content .search-bar {
+            flex-grow: 1;
+            margin-right: 10px;
+        }
+        .top-selling-head h3 {
+            margin-bottom: 20px;
+        }
+        .top-selling table {
+            width: 100%;
+        }
+        .top-selling th, .top-selling td {
+            padding: 10px;
+            text-align: left;
+        }
+        .top-selling th {
+            background-color: #6f42c1;
+            color: white;
+        }
+        .top-selling td {
+            background-color: #e1bee7;
+        }
+        .chartBtn {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="sidebar" id="sidebar">
+                <div class="text-center mb-4">
+                    <img src="/adminAssets/assets/images/main-logo.png" alt="Books Paradise" class="img-fluid">
+                </div>
+                <a href="/admin/dashboard">Dashboard</a>
+                <a href="/admin/products">Products</a>
+                <a href="/admin/users">Users</a>
+                <a href="/admin/Orders">Orders</a>
+                <a href="/admin/return-orders">Returned Orders</a>
+                <a href="/admin/coupons">Coupons</a>
+                <a href="/admin/category">Categories</a>
+                <a href="/admin/reports">Reports</a>
+                <a href="/admin/logout">Log Out</a>
+            </div>
+            <div class="col-md-12">
+                <div class="top-bar" id="top-bar">
+                    <div class="d-flex align-items-center">
+                        <span class="toggle-btn" id="toggle-btn"><i class="fas fa-bars fa-2x"></i></span>
+                        <div class="search-bar">
+                            <input type="text" class="form-control" placeholder="Search">
+                        </div>
+                    </div>
+                    <div class="user-info d-flex align-items-center">
+                        <span>Hi Admin</span>
+                        <i class="fas fa-user-circle fa-2x ml-3"></i>
+                    </div>
+                </div>
+                <div class="main-content" id="main-content">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+                        </ol>
+                    </nav>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="card">
+                                <h3>Total User</h3>
+                                <i class="fas fa-users fa-3x"></i>
+                                <h3><%= statistics.newUsers %></h3>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card">
+                                <h3>Total Order</h3>
+                                <i class="fas fa-box fa-3x"></i>
+                                <h3><%= statistics.totalOrders %></h3>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card">
+                                <h3>Total Sales</h3>
+                                <i class="fas fa-rupee-sign fa-3x"></i>
+                                <h3>₹ <%= statistics.totalNetSale %></h3>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card">
+                                <h3>Total Coupon</h3>
+                                <i class="fas fa-tags fa-3x"></i>
+                                <h3>₹ <%= statistics.totalCouponDiscount %></h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chart mb-4">
+                        <h2>Sales Details</h2>
+                        <div class="d-flex align-items-center mb-3">
+                            <button id="yearBtn" class="chartBtn">Show Yearly</button>
+                            <button id="monthBtn" class="chartBtn">Show Monthly</button>
+                            <button id="weekBtn" class="chartBtn">Show Weekly</button>
+                        </div>
+                        <canvas id="salesChart" width=auto height="100"></canvas>                        
+                    </div>
+
+                    <div class="chart mb-4">
+                        <h2>Category Sales</h2>
+                        <canvas id="categorySalesChart"></canvas>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-lg-6 mb-4">
+                            <div class="top-selling">
+                                <div class="top-selling-head">
+                                    <h3>Top Categories</h3>
+                                </div>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th style="text-align: center;">No.</th>
+                                            <th>Category Name</th>
+                                            <th style="text-align: center;">Total Sales</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% topCategory.forEach((category, index) => { %>
+                                        <tr>
+                                            <td style="text-align: center;"><%= index+1 %></td>
+                                            <td><%= category._id %></td>
+                                            <td style="text-align: center;"><%= category.totalSales %></td>
+                                        </tr>
+                                        <% }) %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 mb-4">
+                            <div class="top-selling">
+                                <div class="top-selling-head">
+                                    <h3>Top Products</h3>
+                                </div>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th style="text-align: center;">No.</th>
+                                            <th>Product Name</th>
+                                            <th style="text-align: center;">Total Sales</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% topProducts.forEach((product, index) =>{ %>
+                                        <tr>
+                                            <td style="text-align: center;"><%= index+1 %></td>
+                                            <td><%= product.productName %></td>
+                                            <td style="text-align: center;"><%= product.totalSales %></td>
+                                        </tr>
+                                        <% }) %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End of top row -->
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            document.getElementById("toggle-btn").addEventListener("click", function () {
+                document.getElementById("sidebar").classList.toggle("active");
+                document.getElementById("top-bar").classList.toggle("active");
+                document.getElementById("main-content").classList.toggle("active");
+            });
+        });
+
+        
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const orderData = JSON.parse('<%- JSON.stringify(orderData) %>');
+            
+
+            let salesChart; // Reference to the current chart instance
+
+            function generateYearlyChartData(data) {
+                const labels = [];
+                const values = [];
+
+                Object.keys(data).forEach(year => {
+                    labels.push(year);
+                    let total = 0;
+                    Object.keys(data[year]).forEach(month => {
+                        Object.keys(data[year][month]).forEach(week => {
+                            total += data[year][month][week];
+                        });
+                    });
+                    values.push(total);
+                });
+
+                return {
+                    labels,
+                    values
+                };
+            }
+
+            function generateMonthlyChartData(data) {
+                const labels = Array.from({length: 12}, (_, i) => i + 1); // Labels 1 to 12 for months
+                const values = Array(12).fill(0);
+
+                Object.keys(data).forEach(year => {
+                    Object.keys(data[year]).forEach(month => {
+                        let total = 0;
+                        Object.keys(data[year][month]).forEach(week => {
+                            total += data[year][month][week];
+                        });
+                        values[month - 1] += total; // month is 1-based, array is 0-based
+                    });
+                });
+
+                return {
+                    labels,
+                    values
+                };
+            }
+
+            function generateWeeklyChartData(data) {
+                const labels = Array.from({length: 52}, (_, i) => i + 1); // Labels 1 to 52 for weeks
+                const values = Array(52).fill(0);
+
+                Object.keys(data).forEach(year => {
+                    Object.keys(data[year]).forEach(month => {
+                        Object.keys(data[year][month]).forEach(week => {
+                            values[week - 1] += data[year][month][week]; // week is 1-based, array is 0-based
+                        });
+                    });
+                });
+
+                return {
+                    labels,
+                    values
+                };
+            }
+
+            function renderChart(chartData, lineColor = 'rgba(75, 192, 192, 1)') {
+                if (salesChart) {
+                    salesChart.destroy(); // Destroy the existing chart instance
+                }
+                
+                const ctx = document.getElementById('salesChart').getContext('2d');
+                salesChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: chartData.labels,
+                        datasets: [{
+                            label: 'Total Sales',
+                            data: chartData.values,
+                            borderColor: lineColor,
+                            borderWidth: 1,
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            x: {
+                                display: true,
+                                title: {
+                                    display: true,
+                                    text: 'Time'
+                                }
+                            },
+                            y: {
+                                display: true,
+                                title: {
+                                    display: true,
+                                    text: 'Sales Amount'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            const yearlyData = generateYearlyChartData(orderData);
+            renderChart(yearlyData); // Default to yearly chart
+
+            document.getElementById('yearBtn').addEventListener('click', () => {
+                const yearData = generateYearlyChartData(orderData);
+                renderChart(yearData, 'rgba(255, 99, 132, 1)');
+            });
+
+            document.getElementById('monthBtn').addEventListener('click', () => {
+                const monthData = generateMonthlyChartData(orderData);
+                renderChart(monthData, 'rgba(54, 162, 235, 1)');
+            });
+
+            document.getElementById('weekBtn').addEventListener('click', () => {
+                const weekData = generateWeeklyChartData(orderData);
+                renderChart(weekData, 'rgba(75, 192, 192, 1)');
+            });
+
+            
+    //Categoey graph logic
+            const categorySalesDataStr = `<%- JSON.stringify(categorySalesData) %>`;
+
+            // Parse the JSON string back to an object
+            const categorySalesData = JSON.parse(categorySalesDataStr);
+            // Extract labels and sales data
+            const labels = categorySalesData.map(data => data.category);
+            const sales = categorySalesData.map(data => data.sales);
+            // Generate the chart
+            const ctx = document.getElementById('categorySalesChart').getContext('2d');
+            const categorySalesChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Category Sales',
+                        data: sales,
+                        backgroundColor: 'rgba(128, 0, 128, 0.2)',
+                        borderColor: 'rgba(128, 0, 128, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+            
+        });
+    </script>
+
+    
+</body>
+</html>

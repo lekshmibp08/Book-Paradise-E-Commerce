@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Products</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <link id="stylesheet" rel="stylesheet" href="/adminAssets/assets/css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="sidebar" id="sidebar">
+                <div class="text-center mb-4">
+                    <img src="/adminAssets/assets/images/main-logo.png" alt="Books Paradise" class="img-fluid">
+                </div>
+                <a href="/admin/dashboard">Dashboard</a>
+                <a href="/admin/products">Products</a>
+                <a href="/admin/users">Users</a>
+                <a href="/admin/orders">Orders</a>
+                <a href="/admin/return-orders">Returned Orders</a>
+                <a href="/admin/coupons">Coupons</a>
+                <a href="/admin/category">Categories</a>
+                <a href="/admin/reports">Reports</a>
+                <a href="/admin/logout">Log Out</a>
+            </div>
+            <div class="col-md-12">
+                <div class="top-bar" id="top-bar">
+                    <div class="d-flex align-items-center">
+                        <span class="toggle-btn" id="toggle-btn"><i class="fas fa-bars fa-2x"></i></span>
+                        <div class="search-bar">
+                            <input type="text" class="form-control" placeholder="Search">
+                        </div>
+                    </div>
+                    <div class="user-info d-flex align-items-center">
+                        <span>Hi Admin</span>
+                        <i class="fas fa-user-circle fa-2x ml-3"></i>
+                    </div>
+                </div>
+                <div class="main-content" id="main-content">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
+                            <li class="breadcrumb-item"><a href="/admin/products">Products</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Add Product</li>
+                        </ol>
+                    </nav>
+                    <div class="header-content">
+                        <h2>Add Products</h2>
+                    </div>
+                    <div class="row custom-row">
+                        <div class="col-lg-12">
+                            <div class="product-add-form">
+                                <h5>Product Details</h5>
+                                <form action="/admin/addProducts" method="POST" id="product-form" enctype="multipart/form-data">
+                                    <label class="form-label">Product title</label>
+                                    <input type="text" name="productName" id="productName" class="form-control" placeholder="Product title" required>
+                                    <div class="error-message" id="productNameError"></div>
+
+                                    <label class="form-label">Full description</label>
+                                    <textarea name="description" id="description" class="form-control" rows="5" placeholder="Full description"></textarea>
+                                    <div class="error-message" id="descriptionError"></div>
+
+                                    <div class="row">
+                                        <div class="col">
+                                            <label class="form-label">Regular price</label>
+                                            <input name="regularPrice" id="regularPrice" type="number" class="form-control" placeholder="Regular price" required>
+                                            <div class="error-message" id="regularPriceError"></div>
+                                        </div>
+                                        <div class="col">
+                                            <label class="form-label">Sale Price</label>
+                                            <input name="salePrice" id="salePrice" type="number" class="form-control" placeholder="Promotional Price" required>
+                                            <div class="error-message" id="salePriceError"></div>
+                                        </div>
+                                        <div class="col">
+                                            <label class="form-label">Category</label>
+                                            <select name="category" id="category" class="form-control">
+                                                <option value="">Select Category</option>
+                                                <% for (let i=0; i < category.length; i++) { %>
+                                                    <option value="<%= category[i].name %>">
+                                                        <%= category[i].name %>
+                                                    </option>
+                                                <% } %>                                                
+                                            </select>
+                                            <div class="error-message" id="categoryError"></div>
+                                        </div>
+                                    </div>
+                                    <label class="form-label">Language</label>
+                                    <input name="language" id="language" type="text" class="form-control" placeholder="Language">
+                                    <div class="error-message" id="languageError"></div>
+                                
+                                    <label class="form-label">Author title</label>
+                                    <input name="authorTitle" id="authorTitle" type="text" class="form-control" placeholder="Author title">
+                                    <div class="error-message" id="authorTitleError"></div>
+                                
+                                    <label class="form-label">Author details</label>
+                                    <input name="authorDetails" id="authorDetails" type="text" class="form-control" placeholder="Author details">
+                                    <div class="error-message" id="authorDetailsError"></div>
+                                
+                                    <label class="form-label">Quantity</label>
+                                    <input name="quantity" id="quantity" type="number" class="form-control" placeholder="Quantity">
+                                    <div class="error-message" id="quantityError"></div>
+
+                                    <div class="product-form-bottom">
+                                        <!-- input file for image upload but the button is display is set as none -->
+                                        <input type="file" id="product-image-upload" name="productImage" accept="image/png, image/jpeg" multiple class="d-none">
+                        
+                                        <!-- using the label the image is uploaded -->
+                                        <label for="product-image-upload" class="btn btn-warning">
+                                            <i class="fas fa-upload"></i> &nbsp; Choose Images
+                                        </label>
+                        
+                                        <!-- the product preview will generate based on what we select -->
+                                        <div id="product-image-preview"></div>
+                        
+                                        <!-- the form submission and cancel buttons -->
+                                        <div>
+                                            <a href="/admin/products" class="btn btn-secondary">Cancel</a>
+                                            <button class="btn btn-success" type="submit">Add Product</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="cropper-modal">
+                        <div id="cropper-container">
+                            <img id="cropper-image" style="max-width: 100%;">
+                            <div id="cropper-buttons">
+                                <button id="crop-cancel" class="btn btn-secondary">Cancel</button>
+                                <button id="crop-confirm" class="btn btn-primary">Crop</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.7/dist/sweetalert2.all.min.js"></script>
+
+    <script>
+        document.getElementById('toggle-btn').addEventListener('click', function() {
+            var sidebar = document.getElementById('sidebar');
+            var topBar = document.getElementById('top-bar');
+            var mainContent = document.getElementById('main-content');
+            sidebar.classList.toggle('active');
+            topBar.classList.toggle('active');
+            mainContent.classList.toggle('active');
+        });
+
+        const productImageUpload = document.getElementById('product-image-upload');
+        const productImagePreview = document.getElementById('product-image-preview');
+        const cropperModal = document.getElementById('cropper-modal');
+        const cropperImage = document.getElementById('cropper-image');
+        const cropCancel = document.getElementById('crop-cancel');
+        const cropConfirm = document.getElementById('crop-confirm');
+        let cropper;
+        let files = [];
+        let currentFileIndex;
+
+        productImageUpload.addEventListener('change', () => {
+            productImagePreview.innerHTML = '';
+            files = Array.from(productImageUpload.files);
+            if (files.length > 4) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: "Maximum file count is 4",
+                    confirmButtonText: "OK",
+                });
+                productImageUpload.value = '';
+                files = [];
+                return;
+            }
+            if (files.length === 0) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: "Minimum file count is 1",
+                    confirmButtonText: "OK",
+                });
+                productImageUpload.value = '';
+                files = [];
+                return;
+            }
+            files.forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const imageUrl = e.target.result;
+                    const imageElement = document.createElement('img');
+                    imageElement.src = imageUrl;
+                    imageElement.style.maxWidth = '200px';
+                    imageElement.style.cursor = 'pointer';
+                    imageElement.addEventListener('click', () => {
+                        currentFileIndex = index;
+                        cropperImage.src = imageUrl;
+                        cropper = new Cropper(cropperImage, {
+                            viewMode: 1,
+                            autoCropArea: 1,
+                        });
+                        cropperModal.style.display = 'block';
+                    });
+                    productImagePreview.appendChild(imageElement);
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+
+        cropCancel.addEventListener('click', () => {
+            cropperModal.style.display = 'none';
+            cropper.destroy();
+        });
+
+        cropConfirm.addEventListener('click', () => {
+            const canvas = cropper.getCroppedCanvas();
+            canvas.toBlob((blob) => {
+                const croppedFile = new File([blob], files[currentFileIndex].name, { type: 'image/jpeg' });
+                files[currentFileIndex] = croppedFile;
+                
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const imageUrl = e.target.result;
+                    const imageElement = productImagePreview.children[currentFileIndex];
+                    imageElement.src = imageUrl;
+                    cropperModal.style.display = 'none';
+                    cropper.destroy();
+                };
+                reader.readAsDataURL(croppedFile);
+            }, 'image/jpeg');
+        });
+
+document.getElementById('product-form').addEventListener('submit', (event) => {
+    // Validate form fields
+    const productName = document.getElementById('productName').value.trim();
+    const description = document.getElementById('description').value.trim();
+    const regularPrice = parseFloat(document.getElementById('regularPrice').value);
+    const salePrice = parseFloat(document.getElementById('salePrice').value);
+    const category = document.getElementById('category').value.trim();
+    const language = document.getElementById('language').value.trim();
+    const authorTitle = document.getElementById('authorTitle').value.trim();
+    const authorDetails = document.getElementById('authorDetails').value.trim();
+    const quantity = parseInt(document.getElementById('quantity').value);
+
+    let isValid = true;
+
+    // Product Name validation
+    if (productName === '') {
+        isValid = false;
+        document.getElementById('productNameError').innerText = 'Product name is required';
+    } else {
+        document.getElementById('productNameError').innerText = '';
+    }
+
+    // Description validation
+    if (description === '') {
+        isValid = false;
+        document.getElementById('descriptionError').innerText = 'Description is required';
+    } else {
+        document.getElementById('descriptionError').innerText = '';
+    }
+
+    // Regular Price validation
+    if (isNaN(regularPrice) || regularPrice <= 0) {
+        isValid = false;
+        document.getElementById('regularPriceError').innerText = 'Regular price must be a valid number greater than zero';
+    } else {
+        document.getElementById('regularPriceError').innerText = '';
+    }
+
+    // Sale Price validation
+    if (isNaN(salePrice) || salePrice <= 0) {
+        isValid = false;
+        document.getElementById('salePriceError').innerText = 'Sale price must be a valid number greater than zero';
+    } else {
+        document.getElementById('salePriceError').innerText = '';
+    }
+
+    // Category validation
+    if (category === '') {
+        isValid = false;
+        document.getElementById('categoryError').innerText = 'Category is required';
+    } else {
+        document.getElementById('categoryError').innerText = '';
+    }
+
+    // Language validation
+    if (language === '') {
+        isValid = false;
+        document.getElementById('languageError').innerText = 'Language is required';
+    } else {
+        document.getElementById('languageError').innerText = '';
+    }
+
+    // Author Title validation
+    if (authorTitle === '') {
+        isValid = false;
+        document.getElementById('authorTitleError').innerText = 'Author title is required';
+    } else {
+        document.getElementById('authorTitleError').innerText = '';
+    }
+
+    // Author Details validation
+    if (authorDetails === '') {
+        isValid = false;
+        document.getElementById('authorDetailsError').innerText = 'Author details are required';
+    } else {
+        document.getElementById('authorDetailsError').innerText = '';
+    }
+
+    // Quantity validation
+    if (isNaN(quantity) || quantity <= 0) {
+        isValid = false;
+        document.getElementById('quantityError').innerText = 'Quantity must be a valid number greater than zero';
+    } else {
+        document.getElementById('quantityError').innerText = '';
+    }
+
+    if (!isValid) {
+        event.preventDefault();
+        Swal.fire({
+            icon: 'error',
+            title: 'Validation Error',
+            text: 'Please fill out all required fields correctly.',
+        });
+        return false;
+    }
+
+
+    // If form is valid, proceed with form submission
+    const formData = new FormData();
+    formData.append('productName', productName);
+    formData.append('description', description);
+    formData.append('regularPrice', regularPrice);
+    formData.append('salePrice', salePrice);
+    formData.append('category', category);
+    formData.append('language', language);
+    formData.append('authorTitle', authorTitle);
+    formData.append('authorDetails', authorDetails);
+    formData.append('quantity', quantity);
+    files.forEach((file, index) => {
+        formData.append('productImage', file);
+    });
+
+    fetch('/admin/addProducts', {
+        method: 'POST',
+        body: formData
+    }).then(response => {
+        if (response.ok) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: 'Product added successfully!',
+            }).then(() => {
+                window.location.href = '/admin/products';
+            });
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'There was an error adding the product.',
+            });
+        }
+    }).catch(error => {
+        console.error('Error:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'There was an error adding the product.',
+        });
+    });
+
+    event.preventDefault();
+});
+
+    </script>
+</body>
+</html>

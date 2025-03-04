@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Verification</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link id="mainStyle" rel="stylesheet" href="/userAssets/style-otp.css">
+</head>
+<body>
+    <div class="verification-box">
+        <h2>Verify your Email Address</h2>
+        <p>Email verification OTP has been sent to your email. Please enter the OTP below.</p>
+        <form id="otpForm">
+            <div class="form-group">
+                <label for="otp">Verification code</label>
+                <input type="text" class="form-control" id="otp" name="otp" placeholder="Enter OTP" required>
+            </div>
+            <div class="form-group">
+                <span class="resend-code disabled" id="resendCode" onclick="resendOtp()">Resend Code</span>
+                <span class="countdown" id="countdown"></span>
+            </div>
+            <button type="button" class="btn" id="verifyBtn" onclick="verifyOtp()">Verify me</button>
+        </form>
+    </div>
+
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+    <!-- SweetAlert2 JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+
+    <script>
+        let countdownInterval;
+
+        function startCountdown() {
+            const resendCode = document.getElementById('resendCode');
+            const countdown = document.getElementById('countdown');
+            let timeLeft = 90;
+
+            resendCode.classList.add('disabled');
+            resendCode.innerHTML = 'Resend Code';
+            resendCode.onclick = null;
+
+            countdown.innerHTML = `Expires in 00:01:00`;
+
+            countdownInterval = setInterval(() => {
+                if (timeLeft <= 0) {
+                    clearInterval(countdownInterval);
+                    countdown.innerHTML = '';
+                    resendCode.classList.remove('disabled');
+                    resendCode.onclick = resendOtp;
+                } else {
+                    timeLeft--;
+                    const minutes = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+                    const seconds = (timeLeft % 60).toString().padStart(2, '0');
+                    countdown.innerHTML = `Expires in 00:${minutes}:${seconds}`;
+                }
+            }, 1000);
+        }
+
+        async function verifyOtp() {
+            const otp = document.getElementById('otp').value;
+
+            try {
+                const response = await fetch('/verify-otp', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ otp })
+                });
+
+                const data = await response.json();
+
+                if (data.status) {
+                    window.location.href = '/'; // Update with your home page URL
+                } else {
+                    window.location.href = '/signup?message=' + encodeURIComponent(data.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        async function resendOtp() {
+            try {
+                startCountdown()
+                const response = await fetch('/resend-otp', {
+                    method: 'POST'
+                });
+
+                const data = await response.json();
+
+                if (data.status) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'OTP resent successfully',
+                        confirmButtonText: 'OK'
+                    });
+                    startCountdown();
+                } else {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Failed to resend OTP',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', (event) => {
+            startCountdown();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,330 @@
+<%- include("../partials/header") %>
+
+<style>
+    .order-container {
+        max-width: 700px;
+        margin: 0 auto;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .order-container h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .order-details {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .order-details li {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid #eee;
+    }
+
+    .order-details li:last-child {
+        border-bottom: none;
+    }
+
+    .button-container {
+        display: flex;
+        justify-content: center;
+        gap: 50px;
+        margin-top: 20px;
+    }
+
+    .back-button, .invoice-button {
+        padding: 10px 20px;
+        width: 175px;
+        text-align: center;
+        background-color: #3F69AA;
+        color: #fff;
+        text-decoration: none;
+        border: none;
+        border-radius: 4px;
+    }
+
+    .back-button:hover, .invoice-button:hover {
+        background-color: #053d92;
+        color: white;
+    }
+
+    .pay-now {
+        display: block;
+        width: 700px;
+        margin: 20px auto;
+        padding: 10px 20px;
+        text-align: center;
+        background-color: #3F69AA;
+        color: #fff;
+        text-decoration: none;
+        border: none;
+        border-radius: 4px;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .pay-now:hover {
+        background-color: #053d92;
+        color: white;
+    }
+
+    .return-pdt {
+        display: block;
+        padding: 10px 10px;
+        text-align: center;
+        background-color: #3F69AA;
+        color: #fff;
+        text-decoration: none;
+        border: none;
+        border-radius: 4px;
+    }
+
+    .return-pdt:hover {
+        background-color: #053d92;
+        color: white;
+    }
+
+    .payment-error {
+        color: red; 
+        display: none; 
+        text-align: center; 
+        font-weight: bold;
+        font-size: 25px;
+    }
+</style>
+
+<!-- Breadcrumb Start -->
+<div class="breadcrumb-wrap">
+    <div class="container">
+        <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="/profile?tab=orders">Orders</a></li>
+            <li class="breadcrumb-item active">Order Details</li>
+        </ul>
+    </div>
+</div>
+<!-- Breadcrumb End -->
+
+<!-- Order Details Start -->
+<div class="cart-page">
+    <div class="container">
+        <% if (order.paymentMethod === 'Cash on Delivery') { %>
+
+        <div class="payment-error" id="payment-error"></div>   <!--Failed Payment Message-->
+
+        <a href="#" class="pay-now" id="pay-now">PAY NOW</a>
+
+        <% } %>
+        <div class="order-container">
+            <h2>Order Details</h2>
+            <ul class="order-details">
+                <li><span>Order ID</span><span><%= order.orderId %></span></li>
+                <li><span>Total Amount</span><span>₹ <%= order.totalAmount %></span></li>
+                <li><span>Coupon Applied</span><span>₹ <%= order.couponDiscout %></span></li>
+                <li><span>Shipping Charge</span><span>₹ 50</span></li>
+                <li><span>Payment Method</span><span><%= order.paymentMethod %></span></li>
+                <li><span>Status</span><span><%= order.status %></span></li>
+                <li><span>Created At</span><span><%= order.createdAt %></span></li>
+            </ul>
+        </div>
+        <div class="order-container">
+            <h3>Shipping Address</h3>
+            <ul class="order-details">
+                <% if (order.billingAddress) { %>
+                    <li><span>Name</span><span><%= order.billingAddress.name %></span></li>
+                    <li><span>Address Line 1</span><span><%= order.billingAddress.addressLine %></span></li>
+                    <li><span>Locality</span><span><%= order.billingAddress.locality %></span></li>
+                    <li><span>City</span><span><%= order.billingAddress.city %></span></li>
+                <% } else { %>
+                    <li><span style="color: red;">Address is not available</span></li>
+                <% } %>
+            </ul>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>No.</th>
+                                <th>Image</th>
+                                <th>Item Name</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Action/ <br> status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="align-middle">
+                            <% order.items.forEach((item, index) => { %>
+                                <tr>
+                                    <td><%= index + 1 %></td>
+                                    <td><a href="/productDetails?id=<%= item.product.id%>">
+                                        <div><img src="/uploads/product-images/<%= item.product.productImage[0] %>" 
+                                        alt="<%= item.product.name %>" style="width: 40px; height: auto;"></div></a>
+                                    </td>
+
+                                    <td><a href="/productDetails?id=<%= item.product.id%>"><%= item.product.productName %></a></td>
+                                    
+                                    <td><%= item.quantity %></td>
+
+                                    <td><%= item.quantity %> X <%= item.product.salePrice %></td>
+                                    
+                                    <td><%= order.status %> <br>
+                                        <!--
+                                        <% if(order.status === 'Delivered') { %>
+                                            <a href="/return-product/<% item.product._id %>" class="return-pdt">Return</a>
+                                        <% } %>   
+                                        -->                                 
+                                    </td>
+                                
+                                </tr>
+                                <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="button-container">
+
+            <% if (order.status === "Processed" || order.status === "Shipped" || order.status ==='Delivered') { %>
+
+            <a href="/order/<%= order._id %>/invoice" class="invoice-button"   title="download Invoice">
+                Generate Invoice
+            </a>
+
+            <% } %>
+
+            <a href="/profile?tab=orders" class="back-button">Back</a>
+        </div>
+    </div>
+</div>
+
+<!-- Order Details End -->
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    document.querySelector('.pay-now').addEventListener('click', async (e) => {
+        e.preventDefault();
+
+        const orderId = '<%= order._id %>';
+
+        try {
+            const response = await fetch('/paynow-createOrder/orderId', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ orderId })
+            });
+
+            const order = await response.json();
+            console.log("FIRST RESPONSE:", response);
+
+            const options = {
+                key: 'rzp_test_cpYGxJpSjhUjpX',
+                amount: order.amount,
+                currency: order.currency,
+                name: 'Paradise Books',
+                description: 'Order Payment',
+                order_id: order.id,
+                handler: async (response) => {
+                    const data = {
+                        razorpay_order_id: response.razorpay_order_id,
+                        razorpay_payment_id: response.razorpay_payment_id,
+                        razorpay_signature: response.razorpay_signature,
+                        orderId: '<%= order._id %>'
+                    };
+
+                    try {
+                        console.log("ENTERED VERIFY ROUTE");
+                        const result = await fetch('/verifyPayment', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(data)
+                        });
+
+                        const paymentResult = await result.json();
+                        console.log("VERIFICATION RESPONSE:", paymentResult);
+                        
+                        if (paymentResult.success) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: paymentResult.message,
+                                icon: 'success',
+                                confirmButtonText: 'OK'
+                            }).then(() => {
+                                window.location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Failed!',
+                                text: paymentResult.message,
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                            console.log("PAYMENT ERROR");
+                            document.getElementById('payment-error').innerText = paymentResult.message;
+                            document.getElementById('payment-error').style.display = 'block';
+                        }
+                    } catch (error) {
+                        console.log("CATCH ERROR");
+                        document.getElementById('payment-error').innerText = 'Payment verification failed. Please try again.';
+                        document.getElementById('payment-error').style.display = 'block';
+                    }
+                },
+                prefill: {
+                    name: 'user',
+                    email: 'user@sample.com',
+                    contact: '999999999'
+                },
+                theme: {
+                    color: '#3399cc'
+                },
+                modal: {
+                    ondismiss: function() {
+                        // Handle modal dismiss event (user closed without payment)
+                        console.log('Payment window closed without success');
+                        Swal.fire({
+                            title: 'Payment Failed!',
+                            text: 'Payment failed. Try again or try after some time..!',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            showPaymentFailedMessage('!.. Payment failed. Try again or try after some time ..!');
+                        });
+                    }
+                }
+            };
+
+            const rzp1 = new Razorpay(options);
+            rzp1.open();
+        } catch (error) {            
+            document.getElementById('payment-error').innerText = 'Failed to create order. Please try again.';
+            document.getElementById('payment-error').style.display = 'block';
+        }
+    });
+
+    // Function to show payment failed message above Pay Now button
+    function showPaymentFailedMessage(message) {
+        console.log("ENTERED INTO FUNCTION");
+        const paymentErrorElement = document.getElementById('payment-error');
+        paymentErrorElement.innerText = message;
+        paymentErrorElement.style.display = 'block';
+    }
+
+</script>
+
+<%- include("../partials/footer") %>
+
+
+

@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coupon</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .sidebar {
+            height: 100vh;
+            background-color: #6f42c1;
+            padding-top: 20px;
+            color: white;
+            position: fixed;
+            left: 0;
+            width: 250px;
+            transition: left 0.3s;
+            text-align: center;
+            z-index: 2;
+        }
+        .sidebar a {
+            color: white;
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+        }
+        .sidebar a:hover {
+            background-color: #5a36a3;
+        }
+        .top-bar {
+            background-color: #6f42c1;
+            color: white;
+            padding: 10px;
+            margin-left: 250px;
+            transition: margin-left 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .top-bar .search-bar {
+            margin-right: 20px;
+        }
+        .main-content {
+            padding: 20px;
+            margin-left: 250px;
+            transition: margin-left 0.3s;
+        }
+        .coupon-table {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .table th, .table td {
+            vertical-align: middle;
+            text-align: center;
+        }
+        .status-active {
+            background-color: limegreen;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+        .status-expired {
+            background-color: brown;
+            color: white;
+            padding: 5px 17px;
+            border-radius: 5px;
+        }
+        .status-inactive {
+            background-color: orange;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 5px;
+        }
+        .status-select {
+            width: 100%;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-weight: bold;
+        }
+        .status-select option {
+            color: black;
+            font-weight: normal;
+        }
+        .status-active option[value="activated"],
+        .status-expired option[value="expired"] {
+            color: white;
+        }
+        .action-icons i {
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .action-icons i:hover {
+            color: #6f42c1;
+        }
+/****************************/
+/*******Breadcrumb CSS*******/
+/****************************/
+
+        .breadcrumb {
+            background-color: #f8f9fa; /* Light background color */
+            border-radius: 0.25rem; /* Rounded corners */
+            padding: 0.75rem 1rem; /* Padding inside the breadcrumb */
+            margin-bottom: 1rem; /* Space below the breadcrumb */
+        }
+
+        .breadcrumb-item + .breadcrumb-item::before {
+            content: ">";
+            color: #6c757d; /* Dark gray color for the separator */
+            margin-right: 0.5rem;
+            margin-left: 0.5rem;
+        }
+
+        .breadcrumb a {
+            color: #6f42c1; /* Blue color for links */
+            text-decoration: none; /* No underline for links */
+        }
+
+        .breadcrumb a:hover {
+            color: #5a36a3; /* Darker blue on hover */
+            text-decoration: underline; /* Underline on hover */
+        }
+
+        .breadcrumb-item.active {
+            color: #6c757d; /* Dark gray for active item */
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                left: -250px;
+            }
+            .sidebar.active {
+                left: 0;
+            }
+            .top-bar {
+                margin-left: 0;
+            }
+            .top-bar.active {
+                margin-left: 250px;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .main-content.active {
+                margin-left: 250px;
+            }
+        }
+        .toggle-btn {
+            display: none;
+        }
+        @media (max-width: 768px) {
+            .toggle-btn {
+                display: block;
+                cursor: pointer;
+                margin-right: 20px;
+            }
+            .search-bar,
+            .user-info {
+                flex: 1;
+            }
+            .search-bar input {
+                width: 100%;
+            }
+        }
+        .header-content {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .header-content .search-bar {
+            flex-grow: 1;
+            margin-right: 10px;
+        }
+        .header-content .add-coupon-btn {
+            margin-top: 10px;
+            flex-shrink: 0;
+            background-color: #6f42c1;
+            color: white;
+        }
+        .header-content .add-coupon-btn:hover {
+            background-color: #5a36a3;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="sidebar" id="sidebar">
+                <div class="text-center mb-4">
+                    <img src="/adminAssets/assets/images/main-logo.png" alt="Books Paradise" class="img-fluid">
+                </div>
+                <a href="/admin/dashboard">Dashboard</a>
+                <a href="/admin/products">Products</a>
+                <a href="/admin/users">Users</a>
+                <a href="/admin/Orders">Orders</a>
+                <a href="/admin/return-orders">Returned Orders</a>
+                <a href="/admin/coupons">Coupons</a>
+                <a href="/admin/category">Categories</a>
+                <a href="/admin/reports">Reports</a>
+                <a href="/admin/logout">Log Out</a>
+            </div>
+            <div class="col-md-12">
+                <div class="top-bar" id="top-bar">
+                    <div class="d-flex align-items-center">
+                        <span class="toggle-btn" id="toggle-btn"><i class="fas fa-bars fa-2x"></i></span>
+                        <div class="search-bar">
+                            <input type="text" class="form-control" placeholder="Search">
+                        </div>
+                    </div>
+                    <div class="user-info d-flex align-items-center">
+                        <span>Hi Admin</span>
+                        <i class="fas fa-user-circle fa-2x ml-3"></i>
+                    </div>
+                </div>
+                <div class="main-content" id="main-content">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Coupons</li>
+                        </ol>
+                    </nav>
+                    <div class="header-content">
+                        <h2>Coupon</h2>
+                        <a href="/admin/addCoupon" class="btn add-coupon-btn">+ Add Coupon</a>
+
+                    </div>
+                    <div class="coupon-table">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>S.No</th>
+                                    <th>Coupon Name</th>
+                                    <th>Coupon Status</th>
+                                    <th>Coupon Code</th>
+                                    <th>Minimum Purchase</th>
+                                    <th>Discount %</th>
+                                    <th>Maximum Discount</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% coupons.forEach((coupon, index) =>{ %>
+                                    <tr>
+                                        <td><%= index + 1 %></td>
+                                        <td><%= coupon.name %></td>
+                                        <td>
+                                            <% if (new Date(coupon.expiryDate) < currentDate) { %>
+                                                <span class="status-expired">Expired</span>
+                                            <% } else if (coupon.status === true) { %>
+                                                <span class="status-active">Activated</span>
+                                            <% } else { %>
+                                                <span class="status-inactive">Blocked</span>
+                                            <% } %>
+                                        </td>
+                                        <td><%= coupon.code %></td>
+                                        <td>₹ <%= coupon.minAmount %></td>
+                                        <td><%= coupon.discount %>%</td>
+                                        <td>₹ <%= coupon.maxDiscount %></td>
+                                        <td class="action-icons">
+                                            <a href="/admin/coupons/<%= coupon._id %>/edit"><i class="fas fa-edit ml-3"></i></a>
+                                            <% if (coupon.status === true) { %>
+                                            <a href="#" onclick="blockCoupon('<%= coupon._id %>')">
+                                                <button type="" class="btn btn-danger ml-2" style="width: 80px;">Block</button>
+                                            </a>
+                                            <% } else { %>
+                                            <a href="#" onclick="unblockCoupon('<%= coupon._id %>')">                                                
+                                                <button type="" class="btn btn-success unblock-btn ml-2" style="width: 80px;">Unblock</button>
+                                            </a>
+                                            <% } %>                                                                                                                           
+                                        </td>
+                                    </tr>                                
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        document.getElementById('toggle-btn').addEventListener('click', function() {
+            var sidebar = document.getElementById('sidebar');
+            var topBar = document.getElementById('top-bar');
+            var mainContent = document.getElementById('main-content');
+            sidebar.classList.toggle('active');
+            topBar.classList.toggle('active');
+            mainContent.classList.toggle('active');
+        });
+
+//Function for Block Coupon
+        function blockCoupon(couponId) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, block it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch(`/admin/coupons/${couponId}/block`, {
+                        method: 'PATCH'
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                        if (data.message === 'Coupon blocked successfully') {
+                            Swal.fire('Blocked!', 'Coupon blocked successfully..!', 'success').then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire('Error!', 'There is an error blocking the coupon.', 'error');
+                        }
+                    })
+                    .catch(error => {
+                        Swal.fire('Error!', 'There is an error processing your request.', 'error');
+                    });
+                }
+            });
+        }
+
+        function unblockCoupon(couponId) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You want to unblock this coupon?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, unblock it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch(`/admin/coupons/${couponId}/unblock`, {
+                        method: 'PATCH'
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                        if (data.message === 'Coupon unblocked successfully') {
+                            Swal.fire('Unblocked!', 'Coupon unblocked successfully..!', 'success').then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire('Error!', 'There was an error unblocking the coupon.', 'error');
+                        }
+                    })
+                    .catch(error => {
+                        Swal.fire('Error!', 'There was an error processing your request.', 'error');
+                    });
+                }
+            });
+        }
+    </script>
+</body>
+</html>

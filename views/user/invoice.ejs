@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchase Invoice</title>
+    <link rel="stylesheet" href="/userAssets/css/invoice.css">   
+    
+</head>
+<body>
+    <div class="main">
+        
+
+        <div class="container">
+            <div class="invoice-header">
+                <img src="http://localhost:8000/userAssets/img/main-logo.png" alt="Company Logo">
+                <h1> Paradise Books</h1>
+                <p>Los Angeles, CA, USA</p>
+                <p>Phone: (123) 456-7890</p>
+            </div>
+
+            <div class="section">
+                <h2>Invoice To:</h2>
+                <p><%= orderData.billingAddress.name %></p>
+                <p>
+                    <%= orderData.billingAddress.addressLine %>,<br>
+                    <%= orderData.billingAddress.locality %>,
+                    <%= orderData.billingAddress.city %>,<br>
+                    <%= orderData.billingAddress.state %> - 
+                    <%= orderData.billingAddress.pin %>
+                </p>
+                <p><%= userData.email %></p>
+                <p>Ph : <%= orderData.billingAddress.mobile %></p>
+            </div>
+
+            <div class="section">
+                <h2>Invoice Details:</h2>
+                <p>Invoice Number: <%= orderData.orderId %></p>
+                <p>Invoice Date: <%= orderData.createdAt %></p>
+            </div>
+
+            <div class="section">
+                <h2>Items Purchased:</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Quantity</th>
+                            <th>Unit Price</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% orderData.items.forEach((item) => { %>
+                            <tr>
+                                <td><%= item.product.productName %></td>
+                                <td><%= item.quantity %></td>
+                                <td>₹<%= item.product.salePrice %></td>
+                                <td>₹<%= item.total %></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="total">
+                <h3>Subtotal:&emsp;&emsp; ₹ <%= orderData.totalAmount %></h3>
+                <h3>Coupon Discount:&emsp;&emsp;&emsp; ₹ <%= orderData.couponDiscout %></h3>
+                <h3>Total:&emsp;&emsp; ₹<%= orderData.totalAmount  -  orderData.couponDiscout %></h3>
+            </div>
+
+            <div class="invoice-footer">
+                <p>Thank you for your business!</p>
+                <p>If you have any questions, feel free to contact us at support@example.com</p>
+            </div>
+        </div>
+        <div class="button-container">
+            <a href="/download-invoice/<%= orderData._id %>">Download</a>
+            <a href="/view-order/<%= orderData._id %>">Back</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Books Paradise Home Page</title>
+        <meta content="width=device-width, initial-scale=1.0" name="viewport">
+        <meta content="Bootstrap Ecommerce Template" name="keywords">
+        <meta content="Bootstrap Ecommerce Template Free Download" name="description">
+
+        <!-- Favicon -->
+        <link href="/userAssets/img/favicon.ico" rel="icon">
+
+        <!-- Google Fonts -->
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700&display=swap" rel="stylesheet">
+
+        <!-- CSS Libraries -->
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+        <link href="/userAssets/lib/slick/slick.css" rel="stylesheet">
+        <link href="/userAssets/lib/slick/slick-theme.css" rel="stylesheet">
+
+        <!-- Template Stylesheet -->
+        <link href="/userAssets/css/style.css" rel="stylesheet">
+    </head>
+
+    <body>
+        <!-- Top Header Start -->
+        <div class="top-header">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-md-3">
+                        <div class="logo">
+                            <a href="">
+                                <img src="/userAssets/img/main-logo.png" alt="Logo">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="search">
+                            <input type="text" placeholder="Search">
+                            <button><i class="fa fa-search"></i></button>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="user">
+                            <div class="dropdown">
+                                <% if (user) { %>
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><%= user.name %></a>
+                                <% } else { %>
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">My Account</a>
+                                <% } %>
+                                <div class="dropdown-menu">
+                                    <% if (user) { %>
+                                        <a href="/profile" class="dropdown-item">My Account</a>
+                                        <a href="/logout" class="dropdown-item">Logout</a>
+                                    <% } else { %>
+                                        <a href="/login" class="dropdown-item">Login</a>
+                                        <a href="/signup" class="dropdown-item">Register</a>
+                                    <% } %>
+                                </div>
+                            </div>
+                            <% if (user) { %>
+                            <div class="cart">
+                                <a href="/cart"><i class="fa fa-cart-plus"></i></a>
+                                <% if (cart) { %>                                
+                                <span>(<%= cart.items.length %>)</span>
+                                <% } else { %>
+                                <span>(0)</span>
+                                <% } %>
+                            </div>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Top Header End -->
+        
+        
+        <!-- Header Start -->
+        <div class="header">
+            <div class="container">
+                <nav class="navbar navbar-expand-md bg-dark navbar-dark">
+                    <a href="#" class="navbar-brand">MENU</a>
+                    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+                        <div class="navbar-nav m-auto">
+                            <a href="/" class="nav-item nav-link active">Home</a>
+                            <a href="/product" class="nav-item nav-link">Products</a>
+                            <div class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages</a>
+                                <div class="dropdown-menu">
+                                    <a href="/profile" class="dropdown-item">My Account</a>
+                                    <a href="/cart" class="dropdown-item">Cart</a>
+                                    <a href="/wishlist" class="dropdown-item">Wishlist</a>
+                                    <a href="/logout" class="dropdown-item">Log Out</a>
+                                </div>
+                            </div>
+                            <a href="/contact-us" class="nav-item nav-link">Contact Us</a>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        <!-- Header End -->
+        
+        
+        <!-- Main Slider Start -->
+        <div class="home-slider">
+            <div class="main-slider">
+                <div class="main-slider-item"><img src="/userAssets/img/banner-1.png" alt="Slider Image" /></div>
+                <div class="main-slider-item"><img src="/userAssets/img/banner-2.png" alt="Slider Image" /></div>
+                <div class="main-slider-item"><img src="/userAssets/img/banner-3.jpg" alt="Slider Image" /></div>
+            </div>
+        </div>
+        <!-- Main Slider End -->
+        
+        
+        <!-- Feature Start-->
+        <div class="feature">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-3 col-md-6 feature-col">
+                        <div class="feature-content">
+                            <i class="fa fa-shield"></i>
+                            <h2>Trusted Shopping</h2>
+                            <p>
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 feature-col">
+                        <div class="feature-content">
+                            <i class="fa fa-shopping-bag"></i>
+                            <h2>Quality Product</h2>
+                            <p>
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 feature-col">
+                        <div class="feature-content">
+                            <i class="fa fa-truck"></i>
+                            <h2>Worldwide Delivery</h2>
+                            <p>
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 feature-col">
+                        <div class="feature-content">
+                            <i class="fa fa-phone"></i>
+                            <h2>Telephone Support</h2>
+                            <p>
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Feature End-->
+        
+        
+        <!-- Category Start-->
+        <div class="category">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="category-img">
+                            <img src="/userAssets/img/Category-1.png" />
+                            <a class="category-name" href="">
+                                <h2>Love Stories</h2>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="category-img">
+                            <img src="/userAssets/img/category-3.png" />
+                            <a class="category-name" href="">
+                                <h2>Self-Help</h2>
+                            </a>
+                        </div>
+                        <div class="category-img">
+                            <img src="/userAssets/img/category-4.png" />
+                            <a class="category-name" href="">
+                                <h2>Kid's Book</h2>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="category-img">
+                            <img src="/userAssets/img/category-2.png" />
+                            <a class="category-name" href="">
+                                <h2>Coocking Books</h2>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Category End-->
+        
+        
+        <!-- Featured Product Start -->
+        <div class="featured-product">
+            <div class="container">
+                <div class="section-header">
+                    <h3>Featured Product</h3>
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec viverra at massa sit amet ultricies. Nullam consequat, mauris non interdum cursus
+                    </p>
+                </div>
+                <div class="row align-items-center product-slider product-slider-4">
+                    <div class="col-lg-3">
+                        <div class="product-item">
+                            <div class="product-image">
+                                <a href="product-detail.html">
+                                    <img src="https://99bookstores.com/cdn/shop/files/91bYsX41DVL._SL1500.jpg?v=1698414556&width=823" alt="Product Image">
+                                </a>
+                                <div class="product-action">
+                                    <a href="#"><i class="fa fa-cart-plus"></i></a>
+                                    <a href="#"><i class="fa fa-heart"></i></a>
+                                    <a href="#"><i class="fa fa-search"></i></a>
+                                </div>
+                            </div>
+                            <div class="product-content">
+                                <div class="title"><a href="#">Atomic Habits</a></div>
+                                <div class="ratting">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                </div>
+                                <div class="price">₹ 399 <span>₹ 499</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="product-item">
+                            <div class="product-image">
+                                <a href="product-detail.html">
+                                    <img src="https://99bookstores.com/cdn/shop/files/fe666c65-7168-4ecf-bf46-8be0691103cb.jpg?v=1697611857&width=823" alt="Product Image">
+                                </a>
+                                <div class="product-action">
+                                    <a href="#"><i class="fa fa-cart-plus"></i></a>
+                                    <a href="#"><i class="fa fa-heart"></i></a>
+                                    <a href="#"><i class="fa fa-search"></i></a>
+                                </div>
+                            </div>
+                            <div class="product-content">
+                                <div class="title"><a href="#">Rich Dad Poor Dad</a></div>
+                                <div class="ratting">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                </div>
+                                <div class="price">₹ 345 <span>₹ 499</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="product-item">
+                            <div class="product-image">
+                                <a href="product-detail.html">
+                                    <img src="https://99bookstores.com/cdn/shop/files/WhatsAppImage2024-05-01at3.24.15PM.jpg?v=1714557279&width=823" alt="Product Image">
+                                </a>
+                                <div class="product-action">
+                                    <a href="#"><i class="fa fa-cart-plus"></i></a>
+                                    <a href="#"><i class="fa fa-heart"></i></a>
+                                    <a href="#"><i class="fa fa-search"></i></a>
+                                </div>
+                            </div>
+                            <div class="product-content">
+                                <div class="title"><a href="#">My Dark Romeo: An Enemies-to-Lovers Romance</a></div>
+                                <div class="ratting">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                </div>
+                                <div class="price">₹ 499 <span>₹ 799</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="product-item">
+                            <div class="product-image">
+                                <a href="product-detail.html">
+                                    <img src="https://99bookstores.com/cdn/shop/files/39994fe3-32d2-45ff-8f2a-d74b37c44e75.jpg?v=1698387461&width=823" alt="Product Image">
+                                </a>
+                                <div class="product-action">
+                                    <a href="#"><i class="fa fa-cart-plus"></i></a>
+                                    <a href="#"><i class="fa fa-heart"></i></a>
+                                    <a href="#"><i class="fa fa-search"></i></a>
+                                </div>
+                            </div>
+                            <div class="product-content">
+                                <div class="title"><a href="#">The Kite runner</a></div>
+                                <div class="ratting">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                </div>
+                                <div class="price">₹ 349 <span>₹ 599</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="product-item">
+                            <div class="product-image">
+                                <a href="product-detail.html">
+                                    <img src="https://99bookstores.com/cdn/shop/files/71YbHWfpp9L._SL1200.jpg?v=1701097295&width=823" alt="Product Image">
+                                </a>
+                                <div class="product-action">
+                                    <a href="#"><i class="fa fa-cart-plus"></i></a>
+                                    <a href="#"><i class="fa fa-heart"></i></a>
+                                    <a href="#"><i class="fa fa-search"></i></a>
+                                </div>
+                            </div>
+                            <div class="product-content">
+                                <div class="title"><a href="#">Aghori- An Untold Story</a></div>
+                                <div class="ratting">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                </div>
+                                <div class="price">₹ 149 <span>₹ 299</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Featured Product End -->
+        
+        
+        <!-- Newsletter Start -->
+        <div class="newsletter">
+            <div class="container">
+                <div class="section-header">
+                    <h3>Subscribe Our Newsletter</h3>
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec viverra at massa sit amet ultricies. Nullam consequat, mauris non interdum cursus
+                    </p>
+                </div>
+                <div class="form">
+                    <input type="email" value="Your email here">
+                    <button>Submit</button>
+                </div>
+            </div>
+        </div>
+        <!-- Newsletter End -->
+        
+        
+        <!-- Recent Product Start -->
+        <div class="recent-product">
+            <div class="container">
+                <div class="section-header">
+                    <h3>Recent Product</h3>
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec viverra at massa sit amet ultricies. Nullam consequat, mauris non interdum cursus
+                    </p>
+                </div>
+                <div class="row align-items-center product-slider product-slider-4">
+                    <div class="col-lg-3">
+                        <div class="product-item">
+                            <div class="product-image">
+                                <a href="product-detail.html">
+                                    <img src="https://99bookstores.com/cdn/shop/files/b4127c55-628a-4480-b849-5e7672277445.jpg?v=1698254985&width=823" alt="Product Image">
+                                </a>
+                                <div class="product-action">
+                                    <a href="#"><i class="fa fa-cart-plus"></i></a>
+                                    <a href="#"><i class="fa fa-heart"></i></a>
+                                    <a href="#"><i class="fa fa-search"></i></a>
+                                </div>
+                            </div>
+                            <div class="product-content">
+                                <div class="title"><a href="#">Momentum Masters: A Roundtable Interview with Super Traders</a></div>
+                                <div class="ratting">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                </div>
+                                <div class="price">₹ 649 <span>₹ 999</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="product-item">
+                            <div class="product-image">
+                                <a href="product-detail.html">
+                                    <img src="https://99bookstores.com/cdn/shop/files/51KGAZPzVCL.jpg?v=1707826778&width=823" alt="Product Image">
+                                </a>
+                                <div class="product-action">
+                                    <a href="#"><i class="fa fa-cart-plus"></i></a>
+                                    <a href="#"><i class="fa fa-heart"></i></a>
+                                    <a href="#"><i class="fa fa-search"></i></a>
+                                </div>
+                            </div>
+                            <div class="product-content">
+                                <div class="title"><a href="#">Trading Psychology 2.0:</a></div>
+                                <div class="ratting">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                </div>
+                                <div class="price">₹ 1099 <span>₹ 1500</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="product-item">
+                            <div class="product-image">
+                                <a href="product-detail.html">
+                                    <img src="https://99bookstores.com/cdn/shop/files/WhatsAppImage2024-05-01at3.47.08PM.jpg?v=1714558651&width=823" alt="Product Image">
+                                </a>
+                                <div class="product-action">
+                                    <a href="#"><i class="fa fa-cart-plus"></i></a>
+                                    <a href="#"><i class="fa fa-heart"></i></a>
+                                    <a href="#"><i class="fa fa-search"></i></a>
+                                </div>
+                            </div>
+                            <div class="product-content">
+                                <div class="title"><a href="#">The Folk of the Air Combo (3 Books)</a></div>
+                                <div class="ratting">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                </div>
+                                <div class="price">₹ 1599 <span>₹ 1999</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="product-item">
+                            <div class="product-image">
+                                <a href="product-detail.html">
+                                    <img src="https://99bookstores.com/cdn/shop/files/81AToth2o_L._SL1500.jpg?v=1700031923&width=823" alt="Product Image">
+                                </a>
+                                <div class="product-action">
+                                    <a href="#"><i class="fa fa-cart-plus"></i></a>
+                                    <a href="#"><i class="fa fa-heart"></i></a>
+                                    <a href="#"><i class="fa fa-search"></i></a>
+                                </div>
+                            </div>
+                            <div class="product-content">
+                                <div class="title"><a href="#">JAIL DIARY OF BHAGAT SINGH</a></div>
+                                <div class="ratting">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                </div>
+                                <div class="price">₹ 399 <span>₹ 599</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="product-item">
+                            <div class="product-image">
+                                <a href="product-detail.html">
+                                    <img src="https://99bookstores.com/cdn/shop/files/cd349c1b-25e6-4e6e-8830-c55fdf1d143d.jpg?v=1698341121&width=823" alt="Product Image">
+                                </a>
+                                <div class="product-action">
+                                    <a href="#"><i class="fa fa-cart-plus"></i></a>
+                                    <a href="#"><i class="fa fa-heart"></i></a>
+                                    <a href="#"><i class="fa fa-search"></i></a>
+                                </div>
+                            </div>
+                            <div class="product-content">
+                                <div class="title"><a href="#">The Magic of the Lost Temple</a></div>
+                                <div class="ratting">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                </div>
+                                <div class="price">₹ 355 <span>₹ 499</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Recent Product End -->
+        
+        
+        <%- include("../partials/footer") %>
+        

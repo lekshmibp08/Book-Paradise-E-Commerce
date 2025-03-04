@@ -1,0 +1,100 @@
+body {
+    background-color: #f8f9fa;
+    font-family: 'Arial', sans-serif;
+}
+
+.dashboard-menu {
+    margin-bottom: 30px;
+}
+
+.dashboard-menu li {
+    display: inline;
+    margin: 0 10px;
+}
+
+.dashboard-menu li a {
+    padding: 10px 20px;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.dashboard-menu li a:hover, .dashboard-menu li a.active {
+    background-color: #0056b3;
+}
+
+.dashboard-wrapper {
+    padding: 30px;
+    background-color: #ffffff;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.dashboard-wrapper h2 {
+    font-size: 2rem;
+    color: #333;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.form-group input {
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+    width: 100%;
+}
+
+.form-group .error-message {
+    font-size: 0.875rem;
+    display: none;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+}
+.button-container .back-button {
+    position: absolute;
+    right: 0;
+}
+.back-button {
+    padding: 10px 65px;
+    width: 175px;
+    text-align: center;
+    background-color: #3F69AA;
+    color: #fff;
+    text-decoration: none, !important;
+    border: none;
+    border-radius: 4px;
+}
+.add-money {
+    padding: 10px 20px;
+    width: 175px;
+    text-align: center;
+    background-color: #3F69AA;
+    color: #fff;
+    text-decoration: none;
+    border: none;
+    border-radius: 4px;
+    margin-inline: 450px;
+}
+
+.back-button:hover, .add-money:hover {
+    background-color: #053d92;
+    color: white;
+}

@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categories</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .sidebar {
+            height: 100vh;
+            background-color: #6f42c1;
+            padding-top: 20px;
+            color: white;
+            position: fixed;
+            left: 0;
+            width: 250px;
+            transition: left 0.3s;
+            text-align: center;
+            z-index: 2;
+        }
+        .sidebar a {
+            color: white;
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+        }
+        .sidebar a:hover {
+            background-color: #5a36a3;
+        }
+        .top-bar {
+            background-color: #6f42c1;
+            color: white;
+            padding: 10px;
+            margin-left: 250px;
+            transition: margin-left 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .top-bar .search-bar {
+            margin-right: 20px;
+        }
+        .main-content {
+            padding: 20px;
+            margin-left: 250px;
+            transition: margin-left 0.3s;
+        }
+        .category-add-form {
+            background-color: #e6d6ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .form-control {
+            margin-bottom: 10px;
+        }
+        .btn-add-category {
+            background-color: #6f42c1;
+            color: white;
+            width: 100%;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 20px;
+        }
+        .btn-add-category:hover {
+            background-color: #543491;
+            color: white;
+        }
+        .table th, .table td {
+            vertical-align: middle;
+            text-align: center;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                left: -250px;
+            }
+            .sidebar.active {
+                left: 0;
+            }
+            .top-bar {
+                margin-left: 0;
+            }
+            .top-bar.active {
+                margin-left: 250px;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .main-content.active {
+                margin-left: 250px;
+            }
+        }
+        .toggle-btn {
+            display: none;
+        }
+        @media (max-width: 768px) {
+            .toggle-btn {
+                display: block;
+                cursor: pointer;
+                margin-right: 20px;
+            }
+            .search-bar,
+            .user-info {
+                flex: 1;
+            }
+            .search-bar input {
+                width: 100%;
+            }
+        }
+        .header-content {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .header-content .search-bar {
+            flex-grow: 1;
+            margin-right: 10px;
+        }
+        .header-content .add-category-btn {
+            margin-top: 10px;
+            flex-shrink: 0;
+        }
+        .unblock-btn {
+            background-color: #ffc107;
+            border-color: #ffc107;
+            color: white;
+        }
+    
+        .unblock-btn:hover {
+            background-color: #e0a800; 
+            border-color: #e0a800;
+            color: white;
+        }
+
+        .add-offer-btn {
+            background-color: #6f42c1;
+            border: none;
+            border-radius: 5px;
+            width: 150px;
+            height: 42px;
+            color: white;
+            margin-bottom: 15px;
+            font-size: 1rem;
+            font-weight: 400;            
+        }
+
+        .add-offer-btn:hover {
+            background-color: #543491;
+        }
+
+/*****************************/
+/***********Model CSS**********/
+/*****************************/
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            /* overflow: auto; */
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            position: relative;
+            background-color:  #e6d6ff;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 40%;
+        }
+
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }   
+
+        .close-button:hover,
+        .close-button:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .offer-Form {
+            width: 100%;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .offer-Form label {
+            position: relative;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .offer-Form input[type="number"],
+        .offer-Form select {
+            position: relative;
+            width: 100%;
+            height: auto;
+            padding: 10px;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+        }
+
+        .offer-Form button[type="submit"] {
+            background-color: #6f42c1;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .offer-Form button[type="submit"]:hover {
+            background-color: #543491;
+        }
+
+/****************************/
+/*******Breadcrumb CSS*******/
+/****************************/
+
+        .breadcrumb {
+            background-color: #f8f9fa; /* Light background color */
+            border-radius: 0.25rem; /* Rounded corners */
+            padding: 0.75rem 1rem; /* Padding inside the breadcrumb */
+            margin-bottom: 1rem; /* Space below the breadcrumb */
+        }
+
+        .breadcrumb-item + .breadcrumb-item::before {
+            content: ">";
+            color: #6c757d; /* Dark gray color for the separator */
+            margin-right: 0.5rem;
+            margin-left: 0.5rem;
+        }
+
+        .breadcrumb a {
+            color: #6f42c1; /* Blue color for links */
+            text-decoration: none; /* No underline for links */
+        }
+
+        .breadcrumb a:hover {
+            color: #3f1a84; /* Darker blue on hover */
+            text-decoration: underline; /* Underline on hover */
+        }
+
+        .breadcrumb-item.active {
+            color: #6c757d; /* Dark gray for active item */
+        }        
+
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="sidebar" id="sidebar">
+                <div class="text-center mb-4">
+                    <img src="/adminAssets/assets/images/main-logo.png" alt="Books Paradise" class="img-fluid">
+                </div>
+                <a href="/admin/dashboard">Dashboard</a>
+                <a href="/admin/products">Products</a>
+                <a href="/admin/users">Users</a>
+                <a href="/admin/Orders">Orders</a>
+                <a href="/admin/return-orders">Returned Orders</a>
+                <a href="/admin/coupons">Coupons</a>
+                <a href="/admin/category">Categories</a>
+                <a href="/admin/reports">Reports</a>
+                <a href="/admin/logout">Log Out</a>
+            </div>
+            <div class="col-md-12">
+                <div class="top-bar" id="top-bar">
+                    <div class="d-flex align-items-center">
+                        <span class="toggle-btn" id="toggle-btn"><i class="fas fa-bars fa-2x"></i></span>
+                        <div class="search-bar">
+                            <input type="text" class="form-control" placeholder="Search">
+                        </div>
+                    </div>
+                    <div class="user-info d-flex align-items-center">
+                        <span>Hi Admin</span>
+                        <i class="fas fa-user-circle fa-2x ml-3"></i>
+                    </div>
+                </div>
+                <div class="main-content" id="main-content">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Categories</li>
+                        </ol>
+                    </nav>
+                    <div class="header-content">
+                        <h2>Categories</h2>
+                        <button id="add-offer-btn" class="add-offer-btn">Add Offer</button>
+                    </div>
+                    <div class="category-add-form">
+                        <h6>Category Add</h6>
+                        <form id="category-form" action="/admin/addCategory" method="POST" enctype="multipart/form-data">
+                            <input type="text" class="form-control" name="name" placeholder="Category" required>
+                            <div class="form-group">
+                                <input type="file" class="form-control-file" name="image" required>
+                            </div>
+                            <button class="btn btn-add-category" type="submit">Add</button>
+                        </form>
+                    </div>
+                    <div class="category-list">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Image</th>
+                                    <th>Category Name</th>
+                                    <th>Offer Applied</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% category.forEach(category => { %>
+                                <tr>
+                                    <td><%= category._id %></td>
+                                    <td><img src="/uploads/category-images/<%= category.categoryImage %>" alt="Category Image" width="50"></td>
+                                    <td><%= category.name %></td>
+                                    <td><%= category.categoryOffer %>%</td>
+                                    <td>
+                                        <i class="fas fa-edit"></i>
+                                        <% if (category.isListed) { %>
+                                            <form action="/admin/unblockCategory?id=<%= category._id %>" method="POST">
+                                                <button type="submit" class="btn btn-danger ml-3">Block</button>
+                                            </form>
+                                            <% } else { %>
+                                                <form action="/admin/blockCategory?id=<%= category._id %>" method="POST">
+                                                <button type="submit" class="btn unblock-btn ml-3">Unblock</button>
+                                            </form>
+                                        <% } %>
+                                    </td>
+                                </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!-- Modal -->
+<div id="offerModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <h2>Add Offer</h2>
+        <form id="offerForm" class="offer-Form">
+            <label for="offerPercentage">Offer Percentage:</label>
+            <input type="number" id="offerPercentage" name="offerPercentage" min="0" max="50" value="0" required>
+            <br>
+            <label for="categories">Select Categories:</label>
+            <select id="offercategories" name="categories"  required>
+                <% category.forEach(category=> { %>
+                    <option value="<%= category._id %>">
+                        <%= category.name %>
+                    </option>
+                <% }); %>
+            </select>
+            <br>
+            <button type="submit">Apply Offer</button>
+        </form>
+    </div>
+</div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+    <script>
+        document.getElementById('toggle-btn').addEventListener('click', function() {
+            var sidebar = document.getElementById('sidebar');
+            var topBar = document.getElementById('top-bar');
+            var mainContent = document.getElementById('main-content');
+            sidebar.classList.toggle('active');
+            topBar.classList.toggle('active');
+            mainContent.classList.toggle('active');
+        });
+
+        document.getElementById('category-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+                alert(result.message);
+                if (response.ok) {
+                    window.location.href = '/admin/category';
+                }
+            } catch (error) {
+                alert('An error occurred: ' + error.message);
+            }
+        });
+
+        const addOfferButton = document.getElementById('add-offer-btn');
+        const modal = document.getElementById('offerModal');
+        const closeButton = document.getElementsByClassName('close-button')[0];
+        const offerForm = document.getElementById('offerForm');
+
+        addOfferButton.addEventListener('click', function () {
+            modal.style.display = 'block';
+        });
+
+        closeButton.addEventListener('click', function () {
+            modal.style.display = 'none';
+        });
+
+        window.addEventListener('click', function (event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        });
+
+        offerForm.addEventListener('submit', function (event) {
+            console.log("offerForm called")
+            event.preventDefault();
+            const offerPercentage = document.getElementById('offerPercentage').value;
+            const selectedCategories = document.getElementById('offercategories').selectedOptions;
+            const categoryIds = Array.from(selectedCategories).map(option => option.value);
+
+           
+            fetch('/admin/category/apply-offer', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ offerPercentage, categoryIds })
+            })
+                .then(response => response.json())
+                .then(async data => {
+                    console.log('data',data)
+                    await Swal.fire({
+                        title: 'Offer applied',
+                        text: 'offer applied to category successfully',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    });
+                    modal.style.display = 'none';
+                })
+                .catch(error => {
+                    // Handle any errors
+                    console.error('Error:', error);
+                });
+        });
+    </script>
+</body>
+</html>
