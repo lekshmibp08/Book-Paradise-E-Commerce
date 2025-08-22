@@ -38,7 +38,7 @@ router.get('/auth/google/callback',
     passport.authenticate('google', { failureRedirect: '/login' }),
     async (req, res) => {
         if (!req.user.mobile || !req.user.password) {
-            //req.session.user = req.user;
+            req.session.user = req.user;
             return res.redirect('/auth/google/additional-info');
         }
         req.session.user = req.user._id;
