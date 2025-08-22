@@ -431,7 +431,7 @@ const saveAdditionalInfo = async (req, res) => {
       });
     }
     const referralCode = generateReferralCode();
-    const passwordHash = securePassword(password);
+    const passwordHash = await securePassword(password);
     user.password = passwordHash;
     user.mobile = mobile;
     user.referralCode = referralCode;
