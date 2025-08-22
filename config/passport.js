@@ -8,13 +8,13 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: `http://localhost:${
-        process.env.PORT || 8000
-      }/auth/google/callback`,
+      callbackURL:
+        process.env.NODE_ENV === "production"
+          ? process.env.GOOGLE_CALLBACK_URL
+          : `http://localhost:${process.env.PORT || 8000}/auth/google/callback`,
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
-        //let user = await User.findOne({googleId: profile.id});
         let user = await User.findOne({ email: profile.emails[0].value });
         if (user) {
           if (!user.googleId) {
@@ -25,7 +25,6 @@ passport.use(
           const newUser = new User({
             googleId: profile.id,
             name: profile.name.givenName,
-            mobile: "",
             email: profile.emails[0].value,
             password: "",
             isVerified: true,
