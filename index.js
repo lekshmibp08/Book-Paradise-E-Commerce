@@ -31,9 +31,16 @@ app.use(session({
     saveUninitialized: true,
     cookie: {
         maxAge: parseInt(process.env.SESSION_MAX_AGE, 10),
-        httpOnly: true
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax"
     }
 }))
+
+// Render runs behind a proxy
+if (process.env.NODE_ENV === "production") {
+  app.set("trust proxy", 1); 
+}
 
 app.use(passport.initialize());
 app.use(passport.session());
