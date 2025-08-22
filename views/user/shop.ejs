@@ -1,290 +1,342 @@
 <%- include("../partials/header") %>
 
-
 <!-- Breadcrumb Start -->
 <div class="breadcrumb-wrap">
-    <div class="container">
-        <ul class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/">Home</a></li>
-            <li class="breadcrumb-item"><a href="#">Products</a></li>
-            <li class="breadcrumb-item active">Product List</li>
-        </ul>
-    </div>
+  <div class="container">
+    <ul class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/">Home</a></li>
+      <li class="breadcrumb-item"><a href="#">Products</a></li>
+      <li class="breadcrumb-item active">Product List</li>
+    </ul>
+  </div>
 </div>
 <!-- Breadcrumb End -->
 
 <!-- Product List Start -->
 <div class="product-view">
-    <div class="container">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9">
         <div class="row">
-            <div class="col-md-9">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="row">
-                            <div class="col-md-8">
-
-                                <div class="product-search">
-                                    <input type="text" id="searchInput" placeholder="Search" value="<%= searchQuery %>">
-                                    <button onclick="performSearch()"><i class="fa fa-search"></i></button>
-                                </div>
-
-                            </div>
-                            <div class="col-md-4">
-                                <div class="product-short">
-                                
-                                    <div class="dropdown">
-                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Product short by</a>
-                                        <div class="dropdown-menu dropdown-menu-right">
-                                            <a href="?search=<%= searchQuery %>&sort=price_low" class="dropdown-item">Price: Low to High</a>
-                                            <a href="?search=<%= searchQuery %>&sort=price_high" class="dropdown-item">Price: High to Low</a>
-                                            <a href="?search=<%= searchQuery %>&sort=name_asc" class="dropdown-item">Name: A to Z</a>
-                                            <a href="?search=<%= searchQuery %>&sort=name_desc" class="dropdown-item">Name: Z to A</a>
-                                        </div>
-                                    </div>
-                                    
-                                </div>
-                            </div>
-                        </div>
+          <div class="col-lg-12">
+            <div class="row">
+              <div class="col-md-8">
+                <div class="product-search">
+                  <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Search"
+                    value="<%= searchQuery %>"
+                  />
+                  <button onclick="performSearch()">
+                    <i class="fa fa-search"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="product-short">
+                  <div class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"
+                      >Product short by</a
+                    >
+                    <div class="dropdown-menu dropdown-menu-right">
+                      <a
+                        href="?search=<%= searchQuery %>&sort=price_low"
+                        class="dropdown-item"
+                        >Price: Low to High</a
+                      >
+                      <a
+                        href="?search=<%= searchQuery %>&sort=price_high"
+                        class="dropdown-item"
+                        >Price: High to Low</a
+                      >
+                      <a
+                        href="?search=<%= searchQuery %>&sort=name_asc"
+                        class="dropdown-item"
+                        >Name: A to Z</a
+                      >
+                      <a
+                        href="?search=<%= searchQuery %>&sort=name_desc"
+                        class="dropdown-item"
+                        >Name: Z to A</a
+                      >
                     </div>
-
-                    <% for (let i = 0; i < products.length; i++) { %>
-                        <div class="col-lg-4">
-                            <div class="product-item">
-                                <div class="product-image">
-                                    <% if (products[i].quantity === 0) { %>
-                                        <div class="product-status">sold out</div>
-                                    <% } %>
-                                    <a href="/productDetails?id=<%= products[i].id %>">
-                                        <img src="/uploads/product-images/<%= products[i].productImage[0] %>" alt="Product Image">
-                                    </a>
-                                    <div class="product-action">
-
-                                        <a href="javascript:void(0);" onclick="addToCart('<%= products[i]._id %>')">
-                                            <i class="fa fa-cart-plus"></i>
-                                        </a>
-
-                                        <% if (userData && userData.wishlist && userData.wishlist.includes(products[i]._id)) { %>
-                                            <a href="javascript:void(0);" onclick="toggleWishlist('<%= products[i]._id %>')">
-                                                <i class="fa fa-heart" id="wishlist-icon-<%= products[i]._id %>" style="color: red;"></i>
-                                            </a>
-                                        <% } else { %>
-                                            <a href="javascript:void(0);" onclick="toggleWishlist('<%= products[i]._id %>')">
-                                                <i class="fa fa-heart" id="wishlist-icon-<%= products[i]._id %>" style="color: white;"></i>
-                                            </a>
-                                        <% } %>  
-                                    </div>
-                                </div>
-                                <div class="product-content">
-                                    <div class="title"><a href="/productDetails?id=<%= products[i].id %>"><%= products[i].productName %></a></div>
-                                    <p id="authorTitle">By <%= products[i].authorTitle %></p>
-                                    <div class="ratting">
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                    </div>
-                                    <div class="price">
-                                        <% if (products[i].salePrice < products[i].regularPrice) { %>
-                                            <span>₹<%= products[i].regularPrice %></span>
-                                        <% } %>
-                                        ₹ <%= products[i].salePrice %>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    <% } %>                              
+                  </div>
                 </div>
-
-                <div class="col-lg-12">
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination justify-content-center">
-                            <% for (let i = 1; i <= totalPages; i++) { %> 
-                                <li class="page-item <%= currentPage === i ? 'active' : '' %>">
-                                    <a class="page-link" href="?page=<%= i %>&search=<%= searchQuery %>&sort=<%= sortOption %>"><%= i %></a>
-                                </li>
-                            <% } %>
-                        </ul>
-                    </nav>
-                </div>
+              </div>
             </div>
+          </div>
 
+          <% for (let i = 0; i < products.length; i++) { %>
+          <div class="col-lg-4">
+            <div class="product-item">
+              <div class="product-image">
+                <% if (products[i].quantity === 0) { %>
+                <div class="product-status">sold out</div>
+                <% } %>
+                <a href="/productDetails?id=<%= products[i].id %>">
+                  <img
+                    src="/uploads/product-images/<%= products[i].productImage[0] %>"
+                    alt="Product Image"
+                  />
+                </a>
+                <div class="product-action">
+                  <a
+                    href="javascript:void(0);"
+                    onclick="addToCart('<%= products[i]._id %>')"
+                  >
+                    <i class="fa fa-cart-plus"></i>
+                  </a>
 
-            <div class="col-md-3">
-                
-                <button class="filter-btn" onclick="applyFilters()">Apply Filters</button>
-                <button class="filter-btn" onclick="clearFilters()">Clear All Filters</button>
-
-                <div class="sidebar-widget category">
-                    <h2 class="title">Category</h2>
-                    <ul>
-                        <% categories.forEach((category) => { %>
-                        <li>
-                            <label>
-                                <input type="checkbox" class="category-filter" value="<%= category.name %>">
-                                <%= category.name %>
-                            </label>
-                        </li>
-                        <% }) %>
-                    </ul>
+                  <% if (userData && userData.wishlist &&
+                  userData.wishlist.includes(products[i]._id)) { %>
+                  <a
+                    href="javascript:void(0);"
+                    onclick="toggleWishlist('<%= products[i]._id %>')"
+                  >
+                    <i
+                      class="fa fa-heart"
+                      id="wishlist-icon-<%= products[i]._id %>"
+                      style="color: red"
+                    ></i>
+                  </a>
+                  <% } else { %>
+                  <a
+                    href="javascript:void(0);"
+                    onclick="toggleWishlist('<%= products[i]._id %>')"
+                  >
+                    <i
+                      class="fa fa-heart"
+                      id="wishlist-icon-<%= products[i]._id %>"
+                      style="color: white"
+                    ></i>
+                  </a>
+                  <% } %>
                 </div>
-                
-
-                <div class="sidebar-widget brands">
-                    <h2 class="title">Language</h2>
-                    <ul>
-                        <% languages.forEach((language) => { %>
-                        <li>
-                            <label>
-                                <input type="checkbox" class="language-filter" value="<%= language %>">
-                                <%= language %>
-                            </label>
-                        </li>
-                        <% }) %>
-                    </ul>
+              </div>
+              <div class="product-content">
+                <div class="title">
+                  <a href="/productDetails?id=<%= products[i].id %>"
+                    ><%= products[i].productName %></a
+                  >
                 </div>
-
-                
+                <p id="authorTitle">By <%= products[i].authorTitle %></p>
+                <div class="ratting">
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i>
+                </div>
+                <div class="price">
+                  <% if (products[i].salePrice < products[i].regularPrice) { %>
+                  <span>₹<%= products[i].regularPrice %></span>
+                  <% } %> ₹ <%= products[i].salePrice %>
+                </div>
+              </div>
             </div>
+          </div>
+          <% } %>
         </div>
+
+        <div class="col-lg-12">
+          <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+              <% for (let i = 1; i <= totalPages; i++) { %>
+              <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                <a
+                  class="page-link"
+                  href="?page=<%= i %>&search=<%= searchQuery %>&sort=<%= sortOption %>"
+                  ><%= i %></a
+                >
+              </li>
+              <% } %>
+            </ul>
+          </nav>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <button class="filter-btn" onclick="applyFilters()">
+          Apply Filters
+        </button>
+        <button class="filter-btn" onclick="clearFilters()">
+          Clear All Filters
+        </button>
+
+        <div class="sidebar-widget category">
+          <h2 class="title">Category</h2>
+          <ul>
+            <% categories.forEach((category) => { %>
+            <li>
+              <label>
+                <input
+                  type="checkbox"
+                  class="category-filter"
+                  value="<%= category.name %>"
+                />
+                <%= category.name %>
+              </label>
+            </li>
+            <% }) %>
+          </ul>
+        </div>
+
+        <div class="sidebar-widget brands">
+          <h2 class="title">Language</h2>
+          <ul>
+            <% languages.forEach((language) => { %>
+            <li>
+              <label>
+                <input
+                  type="checkbox"
+                  class="language-filter"
+                  value="<%= language %>"
+                />
+                <%= language %>
+              </label>
+            </li>
+            <% }) %>
+          </ul>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 <!-- Product List End -->
 
 <%- include("../partials/footer") %>
 
 <script>
-
-function addToCart(productId) {
-
-fetch(`/add-to-cart?id=${productId}`, {
-    method: 'POST',
-})
-.then(response => response.json())
-.then(data => {
-    console.log('Response received:', data.status);
-    if (data.status === "Please Login to add products to cart") {
-        Swal.fire({
-            icon: 'error',
-            title: 'User Not Found',
+  function addToCart(productId) {
+    fetch(`/add-to-cart?id=${productId}`, {
+      method: "POST",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Response received:", data.status);
+        if (data.status === "Please Login to add products to cart") {
+          Swal.fire({
+            icon: "error",
+            title: "User Not Found",
             text: data.status,
-        }).then(() => {
+          }).then(() => {
             window.location.href = "/login";
-        });
-    } else if (data.status === true) {
-        Swal.fire({
-            icon: 'success',
-            title: 'Success',
+          });
+        } else if (data.status === true) {
+          Swal.fire({
+            icon: "success",
+            title: "Success",
             text: data.message,
-        });
-    } else if (data.status === false) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
+          });
+        } else if (data.status === false) {
+          Swal.fire({
+            icon: "error",
+            title: "Error",
             text: data.message,
+          });
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "An unexpected error occurred. Please try again later.",
         });
-    } 
-})
-.catch(error => {
-    console.error('Error:', error);
-    Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'An unexpected error occurred. Please try again later.',
-    });
-});
-}
+      });
+  }
 
-function toggleWishlist(productId) {
+  function toggleWishlist(productId) {
     console.log("AJAX Working");
     $.ajax({
-        url: `/add-to-wishlist?id=${productId}`,
-        type: 'POST',
-        success: function(response) {
-            console.log('Success response:', response);
-            if(response) {
-            Swal.fire({
-                title: "Success",
-                text: response.message,
-                icon: 'success',
-                timer: 2000,
-                showConfirmButton: false
-            });
+      url: `/add-to-wishlist?id=${productId}`,
+      type: "POST",
+      success: function (response) {
+        console.log("Success response:", response);
+        if (response) {
+          Swal.fire({
+            title: "Success",
+            text: response.message,
+            icon: "success",
+            timer: 2000,
+            showConfirmButton: false,
+          });
 
-            const icon = document.getElementById(`wishlist-icon-${productId}`);
-            if (icon) {
-                if (response.added) {
-                    icon.style.color = 'red';
-                } else {
-                    icon.style.color = 'white';
-                }
+          const icon = document.getElementById(`wishlist-icon-${productId}`);
+          if (icon) {
+            if (response.added) {
+              icon.style.color = "red";
+            } else {
+              icon.style.color = "white";
             }
+          }
         }
-        },
-        error: function(error) {
-            console.log('Error:', error);
+      },
+      error: function (error) {
+        console.log("Error:", error);
 
-            let errorMessage = 'Something went wrong!';
-            let errorTitle = 'Error!';
+        let errorMessage = "Something went wrong!";
+        let errorTitle = "Error!";
 
-            if (error.status === 404) {  
-                errorTitle = 'User Not Found';
-                errorMessage = 'Please login to manage your Wishlist';
-            } else if (error.responseJSON && error.responseJSON.message) {
-                errorMessage = error.responseJSON.message;
-            }
-
-            Swal.fire({
-                title: errorTitle,
-                text: errorMessage,
-                icon: 'error',
-                showConfirmButton: true
-            }).then(() =>{
-                window.location.href = '/login'
-            })
+        if (error.status === 404) {
+          errorTitle = "User Not Found";
+          errorMessage = "Please login to manage your Wishlist";
+        } else if (error.responseJSON && error.responseJSON.message) {
+          errorMessage = error.responseJSON.message;
         }
+
+        Swal.fire({
+          title: errorTitle,
+          text: errorMessage,
+          icon: "error",
+          showConfirmButton: true,
+        }).then(() => {
+          window.location.href = "/login";
+        });
+      },
     });
-}
+  }
 
-
-function performSearch() {
-    const searchInput = document.getElementById('searchInput').value;
-    const currentSortOption = '<%= sortOption %>';
+  function performSearch() {
+    const searchInput = document.getElementById("searchInput").value;
+    const currentSortOption = "<%= sortOption %>";
     const url = `?search=${searchInput}&sort=${currentSortOption}`;
     window.location.href = url;
-}
+  }
 
-function applyFilters() {
-    const selectedCategories = Array.from(document.querySelectorAll('.category-filter:checked'))
-        .map(checkbox => checkbox.value);
-    const selectedLanguages = Array.from(document.querySelectorAll('.language-filter:checked'))
-        .map(checkbox => checkbox.value);
+  function applyFilters() {
+    const selectedCategories = Array.from(
+      document.querySelectorAll(".category-filter:checked")
+    ).map((checkbox) => checkbox.value);
+    const selectedLanguages = Array.from(
+      document.querySelectorAll(".language-filter:checked")
+    ).map((checkbox) => checkbox.value);
 
-    const searchQuery = document.getElementById('searchInput').value;
-    const currentSortOption = '<%= sortOption %>';
+    const searchQuery = document.getElementById("searchInput").value;
+    const currentSortOption = "<%= sortOption %>";
 
     const url = new URL(window.location.href);
-    url.searchParams.set('search', searchQuery);
-    url.searchParams.set('sort', currentSortOption);
+    url.searchParams.set("search", searchQuery);
+    url.searchParams.set("sort", currentSortOption);
     if (selectedCategories.length > 0) {
-        url.searchParams.set('categories', selectedCategories.join(','));
+      url.searchParams.set("categories", selectedCategories.join(","));
     }
     if (selectedLanguages.length > 0) {
-        url.searchParams.set('languages', selectedLanguages.join(','));
+      url.searchParams.set("languages", selectedLanguages.join(","));
     }
 
     window.location.href = url.href;
-}
+  }
 
-function clearFilters() {
+  function clearFilters() {
     const url = new URL(window.location.href);
-    url.searchParams.delete('search');
-    url.searchParams.delete('categories');
-    url.searchParams.delete('languages');
-    url.searchParams.delete('sort');
-    url.searchParams.delete('page');
-    
-    window.location.href = url.href;
-}
+    url.searchParams.delete("search");
+    url.searchParams.delete("categories");
+    url.searchParams.delete("languages");
+    url.searchParams.delete("sort");
+    url.searchParams.delete("page");
 
+    window.location.href = url.href;
+  }
 </script>
