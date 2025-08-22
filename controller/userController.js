@@ -338,18 +338,20 @@ const sendResetPasswordMail = async (name, email, token) => {
     },
   });
 
-  //const resetLink = `${process.env.CLIENT_URL}/reset-password?token=${token}`;
+  const resetLink = `${process.env.CLIENT_URL}/reset-password?token=${token}`;
 
   const mailOptions = {
     from: `"Books Paradise" <${process.env.EMAIL_USER}>`,
     to: email,
     subject: "Password Reset - Paradise Books",
-    html:
-      "<p>Hi " +
-      name +
-      ', please click here to <a href="http://localhost:8000/reset-password?token=' +
-      token +
-      '"> Resest</a> your Paradise Books Password ',
+    html: `
+        <p>Hi <b>${name}</b>,</p>
+        <p>You requested a password reset. Click the link below to reset your password:</p>
+        <a href="${resetLink}" target="_blank">Reset Password</a>
+        <p>If you did not request this, please ignore this email.</p>
+        <br/>
+        <p>Regards,<br/>Paradise Books Team</p>
+      `,
   };
   transporter.sendMail(mailOptions, (error) => {
     if (error) {
