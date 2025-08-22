@@ -512,10 +512,6 @@ const getShopPage = async (req, res) => {
       .exec();
 
     let totalPages = Math.ceil(count / itemsPerPage);
-    console.log("====================================");
-    console.log(products);
-    console.log(categories);
-    console.log("====================================");
 
     res.render("shop", {
       products: products,
